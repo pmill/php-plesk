@@ -4,7 +4,7 @@ php-plesk
 Introduction
 ------------
 
-This is a package contains a PHP client for the Plesk RPC API.
+This package contains a PHP client for the Plesk RPC API.
 
 The following features are currently supported:
 
