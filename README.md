@@ -4,8 +4,7 @@ php-plesk
 Introduction
 ------------
 
-This is a package that contains a collection of PHP classes giving
-access to the Plesk API.
+This is a package contains a PHP client for the Plesk RPC API.
 
 The following features are currently supported:
 
