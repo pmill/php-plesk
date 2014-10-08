@@ -21,8 +21,15 @@ EOT;
 		$temp = array();
 		for($i=0; $i<count($xml->domain_alias->get->result); $i++)
 		{
-			$node = $xml->domain_alias->get->result[$i];
-			$temp[(int)$node->id] = (string)$node->info->name;
+			if(empty($xml->domain_alias->get->result[$i]->info))
+			{
+				continue;
+			}
+			else
+			{
+				$node = $xml->domain_alias->get->result[$i];
+				$temp[(int)$node->id] = (string)$node->info->name;
+			}
 		}
 		return $temp;
 	}

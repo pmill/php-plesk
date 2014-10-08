@@ -20,6 +20,7 @@ EOT;
 	protected function process_response($xml)
 	{
 		$temp = array();
+		$ownertitle = "owner-login";
 		for($i=0 ;$i<count($xml->domain->get->result); $i++)
 		{
 			$site = $xml->domain->get->result[$i];
@@ -28,6 +29,9 @@ EOT;
 				'status'=>(string)$site->status,
 				'created'=>(string)$site->data->gen_info->cr_date,
 				'name'=>(string)$site->data->gen_info->name,
+				'ip' =>(string)$site->data->gen_info->dns_ip_address,
+				'type' =>(string)$site->data->gen_info->htype,
+				'owner' =>(string)$site->data->gen_info->{$ownertitle},
 			);
 		}
 		return $temp;
