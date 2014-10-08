@@ -9,7 +9,7 @@ This package contains a PHP client for the Plesk RPC API.
 The following features are currently supported:
 
 *	List websites
-*	Retrieve website information
+*	Retrieve website information and subdomains
 *	Retrieve/Add/Delete website aliases
 *	Create/Delete email addresses
 *	Change email address password
@@ -41,9 +41,14 @@ Further examples are available in the examples directory.
 Version History
 ---------------
 
-1.0 (13 Apr 2013)
+Unversioned (13 Apr 2013)
 
 *   First public release of php-plesk.
+
+0.1.0 (08/10/2014)
+
+*   Updated Create Email Address xml payload for newer versions of the Plesk API
+*   Exposed further functionality
 
 
 Copyright and License
