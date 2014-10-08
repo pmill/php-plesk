@@ -5,19 +5,21 @@ require_once(__DIR__."/site_info.php");
 class Create_Email_Address_Request extends Plesk_Request
 {
 	public $xml_packet = <<<EOT
-<?xml version="1.0"?>
-<packet version="1.6.0.2">
+<?xml version="1.0" encoding="UTF-8"?>
+<packet version="1.6.3.5">
 	<mail>
 		<create>
 			<filter>
-				<domain_id>{DOMAIN_ID}</domain_id>
+				<site-id>{DOMAIN_ID}</site-id>
 				<mailname>
 					<name>{USERNAME}</name>
 					<mailbox>
 						<enabled>true</enabled>
 					</mailbox>
-					<password>{PASSWORD}</password>
-					<password_type>crypt</password_type>
+					<password>
+						<value>{PASSWORD}</value>
+						<type>plain</type>
+					</password>
 				</mailname>
 			</filter>
 		</create>
