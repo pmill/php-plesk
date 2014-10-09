@@ -14,8 +14,11 @@
         }
     ],
     "autoload": {
-	    "psr-0": {
-        	"pmill/Plesk": "src/"
-    	}
-	}
+        "psr-0": {
+            "pmill/Plesk": "src/"
+        }
+    },
+    "require": {
+        "php": ">=5.3.0"
+    }
 }
