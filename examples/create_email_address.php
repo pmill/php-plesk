@@ -1,8 +1,8 @@
 <?php
-error_reporting(E_ALL);
-ini_set('display_errors', '1');
 
-require_once("../lib/plesk/create_email_address.php");
+require_once("SplClassLoader.php");
+$classLoader = new SplClassLoader('pmill\Plesk', '../src');
+$classLoader->register();
 
 $config = array(
 	'host'=>'example.com',
@@ -15,6 +15,7 @@ $params = array(
 	'password'=>'areallylongstringwithsomenumbers1',
 );
 
-$request = new Create_Email_Address_Request($config, $params);
+$request = new \pmill\Plesk\CreateEmailAddress($config, $params);
 $info = $request->process();
+
 var_dump($info);

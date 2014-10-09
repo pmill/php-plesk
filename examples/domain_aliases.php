@@ -1,8 +1,8 @@
 <?php
-error_reporting(E_ALL);
-ini_set('display_errors', '1');
 
-require_once("../lib/plesk/domain_aliases.php");
+require_once("SplClassLoader.php");
+$classLoader = new SplClassLoader('pmill\Plesk', '../src');
+$classLoader->register();
 
 $config = array(
 	'host'=>'example.com',
@@ -14,6 +14,7 @@ $params = array(
 	'domain'=>'example.com',
 );
 
-$request = new Domain_Aliases_Request($config, $params);
+$request = new \pmill\Plesk\ListDomainAliases($config, $params);
 $info = $request->process();
+
 var_dump($info);

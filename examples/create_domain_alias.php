@@ -1,8 +1,8 @@
 <?php
-error_reporting(E_ALL);
-ini_set('display_errors', '1');
 
-require_once("../lib/plesk/create_domain_alias.php");
+require_once("SplClassLoader.php");
+$classLoader = new SplClassLoader('pmill\Plesk', '../src');
+$classLoader->register();
 
 $config = array(
 	'host'=>'example.com',
@@ -12,9 +12,10 @@ $config = array(
 
 $params = array(
 	'domain'=>'example.com',
-	'alias'=>'assets.demo.creativecentral.net',
+	'alias'=>'testalias.example.com',
 );
 
-$request = new Create_Domain_Alias_Request($config, $params);
+$request = new \pmill\Plesk\CreateDomainAlias($config, $params);
 $info = $request->process();
+
 var_dump($info);

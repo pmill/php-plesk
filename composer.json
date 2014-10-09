@@ -1,0 +1,21 @@
+{
+    "name":             "pmill/php-plesk",
+    "description":      "PHP client for the Plesk RPC API",
+    "keywords":         ["php", "plesk", "api"],
+    "homepage":         "https://github.com/pmill/php-plesk",
+    "time":             "2014-10-08",
+    "license":          "BSD",
+    "authors": [
+        {
+            "name":         "pmill",
+            "email":        "dev.pmill@gmail.com",
+            "homepage":     "https://github.com/pmill",
+            "role":         "Author"
+        }
+    ],
+    "autoload": {
+	    "psr-0": {
+        	"pmill/Plesk": "src/"
+    	}
+	}
+}
