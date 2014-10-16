@@ -8,11 +8,15 @@ This package contains a PHP client for the Plesk RPC API.
 
 The following features are currently supported:
 
-*   List websites
-*   Retrieve website information and subdomains
-*   Retrieve/Add/Delete website aliases
-*   Create/Delete email addresses
-*   Change email address password
+*   List IP addresses
+*   List service plans
+*   Get server information and stats
+*   List/add/update/delete clients
+*   List/add/update/delete subscriptions
+*   List/add/update/delete sites
+*   List/add/update/delete email addresses
+*   List/add/update/delete domain aliases
+*   List/add/update/delete subdomains
 *   Email dev.pmill@gmail.com with requests for exposing further functionality
 
 Requirements
@@ -33,7 +37,7 @@ supplied user.
         'password'=>'password',
     );
     
-    $request = new \pmill\Plesk\ListSites($config);
+    $request = new \pmill\Plesk\ListClients($config);
     $info = $request->process();
 
 Further examples are available in the examples directory.
@@ -56,6 +60,13 @@ Unversioned (13 Apr 2013)
 *   Updated code for psr-0 autoloading
 *   Updated code for psr-1 basic coding standard
 *   Updated code for psr-2 coding style guide
+
+0.3.0 (16/10/2014)
+
+*   Added functionality for ip addresses, service plans, clients, subscriptions and server information 
+*   Added test script
+*   Updated classes to throw exceptions when requests fail
+*   Sorted examples folder into areas of functionality
 
 Copyright and License
 ---------------------

@@ -9,11 +9,11 @@ class CreateEmailAddress extends BaseRequest
     <mail>
         <create>
             <filter>
-                <site-id>{DOMAIN_ID}</site-id>
+                <site-id>{SITE_ID}</site-id>
                 <mailname>
                     <name>{USERNAME}</name>
                     <mailbox>
-                        <enabled>true</enabled>
+                        <enabled>{ENABLED}</enabled>
                     </mailbox>
                     <password>
                         <value>{PASSWORD}</value>
@@ -26,17 +26,26 @@ class CreateEmailAddress extends BaseRequest
 </packet>
 EOT;
 
+	protected $default_params = array(
+		'email'=>NULL,
+		'password'=>NULL,
+		'enabled'=>TRUE,
+	);
+
     public function __construct($config, $params)
     {
-        list($username, $domain) = explode("@", $params['email']);
+    	parent::__construct($config, $params);
 
-        $request = new GetSiteInfo($config, array('domain'=>$domain));
+		if (!filter_var($this->params['email'], FILTER_VALIDATE_EMAIL))
+			throw new ApiRequestException("Error: Invalid email submitted");
+
+        list($username, $domain) = explode("@", $this->params['email']);
+
+        $request = new GetSite($config, array('domain'=>$domain));
         $info = $request->process();
 
-        $params['domain_id'] = $info['id'];
-        $params['username'] = $username;
-
-        parent::__construct($config, $params);
+        $this->params['site_id'] = $info['id'];
+        $this->params['username'] = $username;
     }
 
     /**
@@ -45,8 +54,12 @@ EOT;
      */
     protected function processResponse($xml)
     {
-        if ($xml->mail->create->result->status == 'error')
-            return FALSE;
+        $result = $xml->mail->create->result;
+
+        if ($result->status == 'error')
+            throw new ApiRequestException((string)$result->errtext);
+
+        $this->id = (int)$result->mailname->id;
         return TRUE;
     }
 }

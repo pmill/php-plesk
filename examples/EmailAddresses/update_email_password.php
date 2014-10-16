@@ -1,14 +1,6 @@
 <?php
 
-require_once("SplClassLoader.php");
-$classLoader = new SplClassLoader('pmill\Plesk', '../src');
-$classLoader->register();
-
-$config = array(
-	'host'=>'example.com',
-	'username'=>'',
-	'password'=>'',
-);
+require_once("../config.php");
 
 $params = array(
 	'email'=>'test1365695330@example.com',

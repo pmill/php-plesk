@@ -8,14 +8,29 @@ class ListSubdomains extends BaseRequest
 <packet version="1.6.0.2">
     <subdomain>
         <get>
-            <filter>
-                <parent-name>{DOMAIN}</parent-name>
-            </filter>
+            <filter/>
         </get>
-    </subdomain>
+    </subdomain> 
 </packet>
 EOT;
 
+    protected $default_params = array(
+		'filter'=>'<filter/>',
+	);
+
+	public function __construct($config, $params=array())
+	{
+		if(isset($params['domain'])) {
+			$params['filter'] = '<filter><site-name>'.$params['domain'].'</site-name></filter>';
+		}
+        
+        if(isset($params['site_id'])) {
+			$params['filter'] = '<filter><site-id>'.$params['site_id'].'</site-id></filter>';
+		}
+
+		parent::__construct($config, $params);
+    }
+    
     /**
      * Process the response from Plesk
      * @return array
@@ -23,16 +38,18 @@ EOT;
     protected function processResponse($xml)
     {
         $result = array();
-
-        for ($i=0; $i<count($xml->subdomain->get->result); $i++) {
-            if (empty($xml->subdomain->get->result[$i]->data)) {
-                continue;
-            }
-            else {
-                $node = $xml->subdomain->get->result[$i];
-                $result[(int)$node->id] = (string)$node->data->name;
-            }
+        
+        foreach ($xml->subdomain->get->result AS $node) {
+			$result[] = array(
+				'id'=>(int)$node->id,
+				'status'=>(string)$node->status,
+				'parent'=>(string)$node->data->parent,
+				'name'=>(string)$node->data->name,
+				'php'=>(string)$this->findProperty($node->data, 'php'),
+				'php_handler_type'=>(string)$this->findProperty($node->data, 'php_handler_type'),
+				'www_root'=>(string)$this->findProperty($node->data, 'www_root'),
+			);
         }
-        return array_unique($result);
+        return $result;
     }
 }

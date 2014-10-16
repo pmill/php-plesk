@@ -22,16 +22,27 @@ class UpdateEmailPassword extends BaseRequest
 </packet>
 EOT;
 
+	protected $default_params = array(
+		'domain_id'=>NULL,
+        'username'=>NULL,
+		'password'=>NULL,
+	);
+
     public function __construct($config, $params)
     {
-        list($username, $domain) = explode("@", $params['email']);
+        if (isset($params['email'])) {
+            if (!filter_var($params['email'], FILTER_VALIDATE_EMAIL))
+                throw new ApiRequestException("Error: Invalid email submitted");
 
-        $request = new GetSiteInfo($config, array('domain'=>$domain));
-        $info = $request->process();
+            list($username, $domain) = explode("@", $params['email']);
 
-        $params['domain_id'] = $info['id'];
-        $params['username'] = $username;
+            $request = new GetSite($config, array('domain'=>$domain));
+            $info = $request->process();
 
+            $params['domain_id'] = $info['id'];
+            $params['username'] = $username;
+        }
+        
         parent::__construct($config, $params);
     }
 
@@ -41,8 +52,12 @@ EOT;
      */
     protected function processResponse($xml)
     {
-        if ($xml->mail->update->result->status == 'error')
-            return FALSE;
+        $result = $xml->mail->update->result;
+
+        if ($result->status == 'error')
+            throw new ApiRequestException((string)$result->errtext);
+
+        $this->id = (int)$result->id;
         return TRUE;
     }
 }

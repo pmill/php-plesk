@@ -5,11 +5,11 @@ class DeleteEmailAddress extends BaseRequest
 {
     public $xml_packet = <<<EOT
 <?xml version="1.0"?>
-<packet version="1.6.0.2">
+<packet version="1.6.3.0">
     <mail>
         <remove>
             <filter>
-                <domain_id>{DOMAIN_ID}</domain_id>
+                <site-id>{SITE_ID}</site-id>
                 <name>{USERNAME}</name>
             </filter>
         </remove>
@@ -17,17 +17,24 @@ class DeleteEmailAddress extends BaseRequest
 </packet>
 EOT;
 
+	protected $default_params = array(
+		'email'=>NULL,
+	);
+
     public function __construct($config, $params)
     {
-        list($username, $domain) = explode("@", $params['email']);
+    	parent::__construct($config, $params);
 
-        $request = new GetSiteInfo($config, array('domain'=>$domain));
+    	if (!filter_var($this->params['email'], FILTER_VALIDATE_EMAIL))
+			throw new ApiRequestException("Error: Invalid email submitted");
+
+        list($username, $domain) = explode("@", $this->params['email']);
+
+        $request = new GetSite($config, array('domain'=>$domain));
         $info = $request->process();
 
-        $params['domain_id'] = $info['id'];
-        $params['username'] = $username;
-
-        parent::__construct($config, $params);
+        $this->params['site_id'] = $info['id'];
+        $this->params['username'] = $username;
     }
 
     /**
