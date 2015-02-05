@@ -17,6 +17,9 @@ The following features are currently supported:
 *   List/add/update/delete email addresses
 *   List/add/update/delete domain aliases
 *   List/add/update/delete subdomains
+*   List database servers
+*   List/add/delete databases
+*   Add database users
 *   Email dev.pmill@gmail.com with requests for exposing further functionality
 
 Requirements
