@@ -68,6 +68,11 @@ Unversioned (13 Apr 2013)
 *   Updated classes to throw exceptions when requests fail
 *   Sorted examples folder into areas of functionality
 
+0.4.0 (05/02/2015)
+
+*   Added functionality for databases 
+*   Updated test script
+
 Copyright and License
 ---------------------
 
