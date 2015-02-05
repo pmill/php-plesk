@@ -102,8 +102,6 @@ if (!isset($data['unlimited_plan_id'])) {
 	throw new Exception("Couldn't find unlimited service plan");
 }
 
-echo "Unlimited service plan found: ".$data['unlimited_plan_id']."<BR>";
-
 /*
  * 4. Creates a new client (CreateClient)
  */
