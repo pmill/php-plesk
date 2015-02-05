@@ -426,14 +426,23 @@ try {
     ));
     $info = $request->process();
     echo "Site deleted: ".$data['domain']."<BR>";
-
+    
+    /*
+	 * 25. Deletes previously created subscription (DeleteSubscription)
+	 */
+    
+    $request = new \pmill\Plesk\DeleteSubscription($config, array(
+	   'id'=>$data['subscription_id'],
+    ));
+    $info = $request->process();
+    echo "Subscription deleted: ".$data['subscription_id']."<BR>";
 }
 catch(Exception $e) {
 	throw $e;
 }
 finally {
 	/*
-	 * 25. Deletes previously created client (DeleteClient)
+	 * 26. Deletes previously created client (DeleteClient)
 	 */
 
 	$request = new \pmill\Plesk\DeleteClient($config, array(
