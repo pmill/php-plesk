@@ -34,7 +34,7 @@ EOT;
         
 		$properties = array();
 
-		foreach (array('www_root', 'ftp_username', 'ftp_password') AS $key) {
+		foreach (array('www_root') AS $key) {
 			if (isset($params[$key])) {
 				$properties[$key] = $params[$key];
 			}

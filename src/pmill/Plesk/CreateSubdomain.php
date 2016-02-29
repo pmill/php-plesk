@@ -23,10 +23,6 @@ class CreateSubdomain extends BaseRequest
 				<value>{FTP_PASSWORD}</value>
             </property>
             <property>
-				<name>php_handler_type</name>
-				<value>{PHP_HANDLER_TYPE}</value>
-            </property>
-            <property>
 				<name>ssl</name>
 				<value>{SSL}</value>
             </property>
@@ -45,7 +41,6 @@ EOT;
 		'www_root'=>NULL,
 		'ftp_username'=>'',
 		'ftp_password'=>'',
-		'php_handler_type'=>'module',
 		'ssl'=>TRUE,
 		'php'=>TRUE,
 	);

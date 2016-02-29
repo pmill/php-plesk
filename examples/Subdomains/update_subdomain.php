@@ -3,10 +3,8 @@
 require_once("../config.php");
 
 $params = array(
-	'subdomain'=>'testsubdomain.example.com',
+	'subdomain'=>'test1.pmill.co.uk',
 	'www_root'=>'/subdomains/testsubdomainrename',
-	'ftp_username'=>'username',
-	'ftp_password'=>'password',
 );
 
 $request = new \pmill\Plesk\UpdateSubdomain($config, $params);

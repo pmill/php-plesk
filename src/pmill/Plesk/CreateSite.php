@@ -19,8 +19,8 @@ class CreateSite extends BaseRequest
 					<value>{PHP}</value>
 				</property>
 				<property>
-					<name>php_handler_type</name>
-					<value>{PHP_HANDLER_TYPE}</value>
+					<name>php_handler_id</name>
+					<value>{PHP_HANDLER_ID}</value>
 				</property>
 				<property>
 					<name>webstat</name>
@@ -41,7 +41,7 @@ EOT;
 		'domain'=>NULL,
 		'subscription_id'=>NULL,
 		'php'=>TRUE,
-		'php_handler_type'=>'module',
+		'php_handler_id'=>'fastcgi',
 		'webstat'=>'none',
 		'www_root'=>NULL,
 	);
