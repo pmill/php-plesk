@@ -183,7 +183,7 @@ EOT;
             if(is_bool($value)) {
             	$value = $value ? 'true' : 'false';
             }
-            $packet = str_replace('{'.strtoupper($key).'}', $value, $packet);
+            $packet = str_replace('{'.strtoupper($key).'}', htmlspecialchars($value), $packet);
         }
 
         return $packet;
