@@ -59,9 +59,9 @@ function random_string($length = 8)
  */
 
 $config = array(
-    'host' => '216.85.168.150',
+    'host' => 'example.com',
     'username' => 'admin',
-    'password' => 'VtUBQNINVuEy2xbRgPPL',
+    'password' => 'password',
 );
 
 /*
