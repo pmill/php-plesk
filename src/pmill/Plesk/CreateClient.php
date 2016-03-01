@@ -3,6 +3,9 @@ namespace pmill\Plesk;
 
 class CreateClient extends BaseRequest
 {
+    /**
+     * @var string
+     */
     public $xml_packet = <<<EOT
 <?xml version="1.0" encoding="UTF-8"?>
 <packet version="1.6.3.0">
@@ -16,58 +19,71 @@ class CreateClient extends BaseRequest
 </packet>
 EOT;
 
-	public $id = NULL;
+    /**
+     * @var int
+     */
+    public $id;
 
-	protected $default_params = array(
-		'company_name'=>'',
-		'contact_name'=>NULL,
-		'username'=>NULL,
-		'password'=>NULL,
-		'status'=>0,
-		'phone'=>'',
-		'fax'=>'',
-		'email'=>'',
-		'address'=>'',
-		'city'=>'',
-		'state'=>'',
-		'post_code'=>'',
-		'country'=>'',
-	);
-
-	protected $node_mapping = array(
-		'company_name'=>'cname',
-		'contact_name'=>'pname',
-		'username'=>'login',
-		'password'=>'passwd',
-		'status'=>'status',
-		'phone'=>'phone',
-		'fax'=>'fax',
-		'email'=>'email',
-		'address'=>'address',
-		'city'=>'city',
-		'state'=>'state',
-		'post_code'=>'pcode',
-		'country'=>'country',
+    protected $default_params = array(
+        'company_name' => '',
+        'contact_name' => null,
+        'username' => null,
+        'password' => null,
+        'status' => 0,
+        'phone' => '',
+        'fax' => '',
+        'email' => '',
+        'address' => '',
+        'city' => '',
+        'state' => '',
+        'post_code' => '',
+        'country' => '',
     );
 
-    public function __construct($config, $params)
-	{
-		$params['nodes'] = $this->generateNodeList($params);
-		parent::__construct($config, $params);
+    /**
+     * @var array
+     */
+    protected $node_mapping = array(
+        'company_name' => 'cname',
+        'contact_name' => 'pname',
+        'username' => 'login',
+        'password' => 'passwd',
+        'status' => 'status',
+        'phone' => 'phone',
+        'fax' => 'fax',
+        'email' => 'email',
+        'address' => 'address',
+        'city' => 'city',
+        'state' => 'state',
+        'post_code' => 'pcode',
+        'country' => 'country',
+    );
+
+    /**
+     * CreateClient constructor.
+     * @param array $config
+     * @param array $params
+     */
+    public function __construct(array $config, array $params)
+    {
+        $params['nodes'] = $this->generateNodeList($params);
+        parent::__construct($config, $params);
     }
 
     /**
-     * Process the response from Plesk
+     * @param $xml
      * @return bool
+     * @throws ApiRequestException
      */
     protected function processResponse($xml)
     {
-    	$result = $xml->customer->add->result;
+        $result = $xml->customer->add->result;
 
-        if ($result->status == 'error')
+        if ($result->status == 'error') {
             throw new ApiRequestException((string)$result->errtext);
+        }
 
         $this->id = (int)$result->id;
-        return TRUE;
+        return true;
     }
 }

@@ -1,6 +1,7 @@
 <?php
 namespace pmill\Plesk;
 
+use pmill\Plesk\Helper\Xml;
 use SimpleXMLElement;
 
 abstract class BaseRequest
@@ -67,10 +68,10 @@ EOT;
     abstract protected function processResponse($xml);
 
     /**
-     * BaseRequest constructor.
      * @param array $config
      * @param array $params
      * @param HttpRequestContract|null $http
+     * @throws ApiRequestException
      */
     public function __construct(array $config, array $params = [], HttpRequestContract $http = null)
     {
@@ -80,6 +81,8 @@ EOT;
         if (!$this->check_params()) {
             throw new ApiRequestException("Error: Incorrect request parameters submitted");
         }
+
+        $this->params = Xml::sanitizeArray($this->params);
 
         $this->http = is_null($http) ? new CurlHttpRequest($this->config['host']) : $http;
         if (isset($this->config['username']) && isset($this->config['password'])) {
@@ -128,16 +131,7 @@ EOT;
      */
     protected function generatePropertyList(array $properties)
     {
-        $result = array();
-
-        foreach ($properties as $key => $value) {
-            $xml = $this->property_template;
-            $xml = str_replace("{KEY}", $key, $xml);
-            $xml = str_replace("{VALUE}", $value, $xml);
-            $result[] = $xml;
-        }
-
-        return implode("\r\n", $result);
+        return Xml::generatePropertyList($this->property_template, $properties);
     }
 
     /**
@@ -148,16 +142,7 @@ EOT;
      */
     protected function generateNodeList(array $properties)
     {
-        $result = array();
-
-        foreach ($properties as $key => $value) {
-            if (isset($this->node_mapping[$key])) {
-                $node_name = $this->node_mapping[$key];
-                $result[] = "<".$node_name.">".$value."</".$node_name.">";
-            }
-        }
-
-        return implode("\r\n", $result);
+        return Xml::generateNodeList($this->node_mapping, $properties);
     }
 
     /**
@@ -169,8 +154,9 @@ EOT;
     {
         try {
             $response = $this->sendRequest($this->getPacket());
+
             if ($response !== false) {
-                $responseXml = $this->parseResponse($response);
+                $responseXml = Xml::convertStringToXml($response);
                 $this->checkResponse($responseXml);
 
                 return $this->processResponse($responseXml);
@@ -195,7 +181,8 @@ EOT;
             if (is_bool($value)) {
                 $value = $value ? 'true' : 'false';
             }
-            $packet = str_replace('{'.strtoupper($key).'}', htmlspecialchars($value), $packet);
+
+            $packet = str_replace('{'.strtoupper($key).'}', $value, $packet);
         }
 
         return $packet;
@@ -211,6 +198,7 @@ EOT;
      */
     private function sendRequest($packet)
     {
+        echo $packet.PHP_EOL.PHP_EOL;
         $domdoc = new \DomDocument('1.0', 'UTF-8');
         if ($domdoc->loadXml($packet) === false) {
             $this->error = 'Failed to load payload';
@@ -219,25 +207,6 @@ EOT;
 
         $body = $domdoc->saveHTML();
         return $this->http->sendRequest($body);
-    }
-
-    /**
-     * Looks if API responded with correct data
-     *
-     * @param string $response_string
-     *
-     * @return SimpleXMLElement
-     * @throws ApiRequestException
-     */
-    private function parseResponse($response_string)
-    {
-        $xml = new SimpleXMLElement($response_string);
-
-        if (!is_a($xml, 'SimpleXMLElement')) {
-            throw new ApiRequestException("Cannot parse server response: {$response_string}");
-        }
-
-        return $xml;
     }
 
     /**

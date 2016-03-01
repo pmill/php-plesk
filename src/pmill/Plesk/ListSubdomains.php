@@ -23,7 +23,7 @@ EOT;
      * @var array
      */
     protected $default_params = array(
-        'filter' => '<filter/>',
+        'filter' => null,
     );
 
     /**
@@ -33,12 +33,16 @@ EOT;
      */
     public function __construct(array $config, array $params = [])
     {
+        $this->default_params['filter'] = new Node('filter');
+
         if (isset($params['domain'])) {
-            $params['filter'] = '<filter><site-name>' . $params['domain'] . '</site-name></filter>';
+            $ownerIdNode = new Node('site-name', $params['domain']);
+            $params['filter'] = new Node('filter', $ownerIdNode);
         }
 
         if (isset($params['site_id'])) {
-            $params['filter'] = '<filter><site-id>' . $params['site_id'] . '</site-id></filter>';
+            $ownerIdNode = new Node('site-id', $params['site_id']);
+            $params['filter'] = new Node('filter', $ownerIdNode);
         }
 
         parent::__construct($config, $params);
