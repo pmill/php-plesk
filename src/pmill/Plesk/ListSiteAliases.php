@@ -21,11 +21,13 @@ EOT;
 	public function __construct($config, $params=array())
 	{
 		if (isset($params['domain'])) {
-			$params['filter'] = '<filter><site-name>'.$params['domain'].'</site-name></filter>';
+            $childNode = new Node('site-name', $params['domain']);
+			$params['filter'] = new Node('filter', $childNode);
 		}
         
         if (isset($params['site_id'])) {
-			$params['filter'] = '<filter><site-id>'.$params['site_id'].'</site-id></filter>';
+            $childNode = new Node('site-id', $params['site_id']);
+            $params['filter'] = new Node('filter', $childNode);
 		}
 
 		parent::__construct($config, $params);

@@ -56,13 +56,12 @@ EOT;
         }
 
         if (count($properties) > 0) {
-            $params['properties'] = '<hosting><vrt_hst>' . $this->generatePropertyList($properties) . '</hosting></vrt_hst>';
+            $childNode = new Node('vrt_hst', $this->generatePropertyList($properties));
+            $params['properties'] = new Node('hosting', $childNode);
         }
 
-        $nodes_value = trim($this->generateNodeList($params));
-
-        if (strlen($nodes_value) > 0) {
-            $params['nodes'] = '<gen_setup>' . $nodes_value . '</gen_setup>';
+        if (count($params) > 0) {
+            $params['nodes'] = new Node('gen_setup', $this->generateNodeList($params));
         }
 
         parent::__construct($config, $params);

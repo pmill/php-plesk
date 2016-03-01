@@ -59,9 +59,9 @@ function random_string($length = 8)
  */
 
 $config = array(
-    'host' => 'example.com',
+    'host' => '216.85.168.150',
     'username' => 'admin',
-    'password' => 'password',
+    'password' => 'VtUBQNINVuEy2xbRgPPL',
 );
 
 /*
@@ -410,8 +410,7 @@ try {
 
         $request = new \pmill\Plesk\UpdateSubdomain($config, array(
             'id' => $data['subdomain_id'],
-            'fpt_username' => random_string(),
-            'fpt_password' => random_string(),
+            'www_root' => '/subdomains/' . strtolower($data['subdomain']).'2',
         ));
         $info = $request->process();
         echo "Subdomain updated: " . $data['subdomain'] . PHP_EOL;

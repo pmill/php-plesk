@@ -131,7 +131,7 @@ EOT;
      */
     protected function generatePropertyList(array $properties)
     {
-        return Xml::generatePropertyList($this->property_template, $properties);
+        return Xml::generatePropertyList($properties);
     }
 
     /**
@@ -198,7 +198,6 @@ EOT;
      */
     private function sendRequest($packet)
     {
-        echo $packet.PHP_EOL.PHP_EOL;
         $domdoc = new \DomDocument('1.0', 'UTF-8');
         if ($domdoc->loadXml($packet) === false) {
             $this->error = 'Failed to load payload';

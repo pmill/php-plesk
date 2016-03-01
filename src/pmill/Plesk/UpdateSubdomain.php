@@ -3,6 +3,9 @@ namespace pmill\Plesk;
 
 class UpdateSubdomain extends BaseRequest
 {
+    /**
+     * @var string
+     */
     public $xml_packet = <<<EOT
 <?xml version="1.0"?>
 <packet version="1.5.2.0">
@@ -17,32 +20,40 @@ class UpdateSubdomain extends BaseRequest
 </packet> 
 EOT;
 
+    /**
+     * @var array
+     */
     protected $default_params = array(
-        'filter'=>NULL,
-        'properties'=>NULL,
+        'filter' => null,
+        'properties' => null,
     );
 
-	public function __construct($config, $params)
-	{
-        if(isset($params['subdomain'])) {
-			$params['filter'] = '<name>'.$params['subdomain'].'</name>';
-		}
-        
-        if(isset($params['id'])) {
-			$params['filter'] = '<id>'.$params['id'].'</id>';
-		}
-        
-		$properties = array();
+    /**
+     * @param array $config
+     * @param array $params
+     * @throws ApiRequestException
+     */
+    public function __construct(array $config, array $params)
+    {
+        if (isset($params['subdomain'])) {
+            $params['filter'] = new Node('name', $params['subdomain']);
+        }
 
-		foreach (array('www_root') AS $key) {
-			if (isset($params[$key])) {
-				$properties[$key] = $params[$key];
-			}
-		}
+        if (isset($params['id'])) {
+            $params['filter'] = new Node('id', $params['id']);
+        }
 
-		$params['properties'] = $this->generatePropertyList($properties);
+        $properties = array();
 
-		parent::__construct($config, $params);
+        foreach (array('www_root') AS $key) {
+            if (isset($params[$key])) {
+                $properties[$key] = $params[$key];
+            }
+        }
+
+        $params['properties'] = $this->generatePropertyList($properties);
+
+        parent::__construct($config, $params);
     }
 
     /**

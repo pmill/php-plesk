@@ -9,7 +9,7 @@ use SimpleXMLElement;
 class Xml
 {
     /**
-     * @param string $response_string
+     * @param string $string
      *
      * @return SimpleXMLElement
      * @throws ApiRequestException
@@ -63,22 +63,23 @@ class Xml
     /**
      * Generates the xml for a standard property list
      *
-     * @param $template
      * @param array $properties
      * @return string
      */
-    public static function generatePropertyList($template, array $properties)
+    public static function generatePropertyList(array $properties)
     {
-        $result = array();
+        $nodes = [];
 
         foreach ($properties as $key => $value) {
-            $xml = $template;
-            $xml = str_replace("{KEY}", $key, $xml);
-            $xml = str_replace("{VALUE}", self::sanitize($value), $xml);
-            $result[] = $xml;
+            $nodeList = new NodeList([
+                new Node('name', $key),
+                new Node('value', $value),
+            ]);
+
+            $nodes[] = new Node('property', $nodeList);
         }
 
-        return implode("\r\n", $result);
+        return new NodeList($nodes);
     }
 
     /**
