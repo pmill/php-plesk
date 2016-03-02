@@ -89,6 +89,10 @@ EOT;
             $this->http->setCredentials($this->config['username'], $this->config['password']);
         }
 
+        if (isset($this->config['key'])) {
+            $this->http->setSecretKey($this->config['key']);
+        }
+
         if (is_null($this->xml_packet) && file_exists($this->xml_filename)) {
             $this->xml_packet = file_get_contents($this->xml_filename);
         }
