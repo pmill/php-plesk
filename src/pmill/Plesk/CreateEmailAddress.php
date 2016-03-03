@@ -58,7 +58,7 @@ EOT;
         $result = $xml->mail->create->result;
 
         if ($result->status == 'error') {
-            throw new ApiRequestException((string)$result->errtext, (int)$result->ercode);
+            throw new ApiRequestException($result);
         }
 
         $this->id = (int)$result->mailname->id;

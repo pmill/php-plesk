@@ -25,11 +25,11 @@ EOT;
         $server = $xml->server->get->result;
 
         if ((string)$server->status == 'error') {
-            throw new ApiRequestException((string)$server->errtext, (int)$server->errcode);
+            throw new ApiRequestException($server);
         }
 
         if ((string)$server->result->status == 'error') {
-            throw new ApiRequestException((string)$server->result->errtext, (int)$server->result->errcode);
+            throw new ApiRequestException($server->result);
         }
 
         $diskspace = array();

@@ -29,7 +29,7 @@ EOT;
     	$webspace = $xml->webspace->del;
 
         if ($webspace->result->status == 'error') {
-            throw new ApiRequestException((string)$webspace->result->errtext, (int)$webspace->result->errcode);
+            throw new ApiRequestException($webspace->result);
         }
 
         return TRUE;

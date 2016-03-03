@@ -29,11 +29,11 @@ EOT;
         $subdomain = $xml->subdomain->get->result;
 
         if ((string)$subdomain->status == 'error') {
-            throw new ApiRequestException((string)$subdomain->errtext, (int)$subdomain->errcode);
+            throw new ApiRequestException($subdomain);
         }
 
         if ((string)$subdomain->result->status == 'error') {
-            throw new ApiRequestException((string)$subdomain->result->errtext, (int)$subdomain->result->errcode);
+            throw new ApiRequestException($subdomain->result);
         }
 
         return array(

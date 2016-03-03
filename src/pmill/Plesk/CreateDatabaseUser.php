@@ -46,8 +46,7 @@ EOT;
     protected function processResponse($xml)
     {
         if ($xml->database->{'add-db-user'}->result->status == 'error') {
-            throw new ApiRequestException((string)$xml->database->{'add-db-user'}->result->errtext,
-                (int)$xml->database->{'add-db-user'}->result->errcode);
+            throw new ApiRequestException($xml->database->{'add-db-user'}->result);
         }
 
         $this->id = (int)$xml->database->{'add-db-user'}->result->id;

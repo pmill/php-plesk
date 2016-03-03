@@ -32,10 +32,10 @@ EOT;
         $site = $xml->domain->get->result;
 
         if ((string)$site->status == 'error') {
-            throw new ApiRequestException((string)$site->errtext, (int)$site->errcode);
+            throw new ApiRequestException($site);
         }
         if ((string)$site->result->status == 'error') {
-            throw new ApiRequestException((string)$site->result->errtext, (int)$site->result->errcode);
+            throw new ApiRequestException($site->result);
         }
 
         $hosting_type = (string)$site->data->gen_info->htype;

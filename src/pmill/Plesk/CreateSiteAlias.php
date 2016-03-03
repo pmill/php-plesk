@@ -53,7 +53,7 @@ EOT;
         $result = $xml->{'site-alias'}->create->result;
 
         if ($result->status == 'error') {
-            throw new ApiRequestException((string)$result->errtext, (int)$result->errcode);
+            throw new ApiRequestException($result);
         }
 
         $this->id = (int)$result->id;

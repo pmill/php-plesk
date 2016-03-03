@@ -60,11 +60,11 @@ EOT;
         $client = $xml->customer->get->result;
 
         if ((string)$client->status == 'error') {
-            throw new ApiRequestException((string)$client->errtext, (int)$client->errcode);
+            throw new ApiRequestException($client);
         }
 
         if ((string)$client->result->status == 'error') {
-            throw new ApiRequestException((string)$client->result->errtext, (int)$client->result->errcode);
+            throw new ApiRequestException($client->result);
         }
 
         return array(

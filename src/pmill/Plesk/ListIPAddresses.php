@@ -19,7 +19,7 @@ EOT;
     protected function processResponse($xml)
     {
         if ((string)$xml->ip->get->result->status == 'error') {
-            throw new ApiRequestException((string)$xml->ip->get->result->errtext);
+            throw new ApiRequestException($xml->ip->get->result);
         }
 
         $result = array();

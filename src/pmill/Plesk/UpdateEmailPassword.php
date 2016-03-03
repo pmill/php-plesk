@@ -32,7 +32,7 @@ EOT;
     {
         if (isset($params['email'])) {
             if (!filter_var($params['email'], FILTER_VALIDATE_EMAIL)) {
-                throw new ApiRequestException("Error: Invalid email submitted");
+                throw new ApiRequestException("Invalid email submitted");
             }
 
             list($username, $domain) = explode("@", $params['email']);
@@ -56,7 +56,7 @@ EOT;
         $result = $xml->mail->update->result;
 
         if ($result->status == 'error') {
-            throw new ApiRequestException((string)$result->errtext, (int)$result->errcode);
+            throw new ApiRequestException($result);
         }
 
         $this->id = (int)$result->id;

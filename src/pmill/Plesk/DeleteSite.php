@@ -27,7 +27,7 @@ EOT;
     protected function processResponse($xml)
     {
         if ($xml->site->del->result->status == 'error') {
-            throw new ApiRequestException((string)$xml->site->del->result->errtext, (int)$xml->site->del->result->errcode);
+            throw new ApiRequestException($xml->site->del->result);
         }
 
         return true;

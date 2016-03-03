@@ -42,7 +42,7 @@ EOT;
         $result = $xml->{'site-alias'}->delete->result;
 
         if ($result->status == 'error') {
-            throw new ApiRequestException((string)$result->errtext, (int)$result->errcode);
+            throw new ApiRequestException($result);
         }
 
         return true;

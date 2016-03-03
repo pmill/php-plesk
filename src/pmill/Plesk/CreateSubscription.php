@@ -51,8 +51,7 @@ EOT;
     protected function processResponse($xml)
     {
         if ($xml->webspace->add->result->status == 'error') {
-            throw new ApiRequestException((string)$xml->webspace->add->result->errtext,
-                (int)$xml->webspace->add->result->errcode);
+            throw new ApiRequestException($xml->webspace->add->result);
         }
 
         $this->id = (int)$xml->webspace->add->result->id;

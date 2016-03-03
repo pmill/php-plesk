@@ -30,7 +30,7 @@ EOT;
     protected function processResponse($xml)
     {
         if ($xml->database->{'get-default-user'}->result->status == 'error') {
-            return false;
+            throw new ApiRequestException($xml->database->{'get-default-user'}->result);
         }
 
         $this->id = (int)$xml->database->{'get-default-user'}->result->id;

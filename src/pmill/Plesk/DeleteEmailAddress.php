@@ -26,7 +26,7 @@ EOT;
         parent::__construct($config, $params);
 
         if (!filter_var($this->params['email'], FILTER_VALIDATE_EMAIL)) {
-            throw new ApiRequestException("Error: Invalid email submitted");
+            throw new ApiRequestException("Invalid email submitted");
         }
 
         list($username, $domain) = explode("@", $this->params['email']);

@@ -34,8 +34,7 @@ EOT;
     protected function processResponse($xml)
     {
         if ($xml->database->{'add-db'}->result->status == 'error') {
-            throw new ApiRequestException((string)$xml->database->{'add-db'}->result->errtext,
-                (int)$xml->database->{'add-db'}->result->errcode);
+            throw new ApiRequestException($xml->database->{'add-db'}->result);
         }
 
         $this->id = (int)$xml->database->{'add-db'}->result->id;
