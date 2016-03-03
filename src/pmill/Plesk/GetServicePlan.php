@@ -32,11 +32,11 @@ EOT;
         $plan = $xml->{"service-plan"}->get->result;
 
         if ((string)$plan->status == 'error') {
-            throw new ApiRequestException((string)$plan->errtext);
+            throw new ApiRequestException((string)$plan->errtext, (int)$plan->errcode);
         }
 
         if ((string)$plan->result->status == 'error') {
-            throw new ApiRequestException((string)$plan->result->errtext);
+            throw new ApiRequestException((string)$plan->result->errtext, (int)$plan->result->errcode);
         }
 
         $hosting = array();

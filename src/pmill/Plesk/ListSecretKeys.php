@@ -58,8 +58,7 @@ EOT;
                     'ip_address' => (string)$result->key_info->ip_address,
                     'description' => (string)$result->key_info->description,
                 ];
-            }
-            elseif ($result->status == 'error') {
+            } elseif ($result->status == 'error') {
                 $response[] = [
                     'status' => (string)$result->status,
                     'key' => (string)$result->key,

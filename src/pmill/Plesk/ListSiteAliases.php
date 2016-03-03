@@ -14,23 +14,25 @@ class ListSiteAliases extends BaseRequest
 </packet>
 EOT;
 
-	protected $default_params = array(
-		'filter'=>'<filter/>',
-	);
+    protected $default_params = array(
+        'filter' => null,
+    );
 
-	public function __construct($config, $params=array())
-	{
-		if (isset($params['domain'])) {
+    public function __construct($config, $params = array())
+    {
+        $params['filter'] = new Node('filter');
+
+        if (isset($params['domain'])) {
             $childNode = new Node('site-name', $params['domain']);
-			$params['filter'] = new Node('filter', $childNode);
-		}
-        
+            $params['filter'] = new Node('filter', $childNode);
+        }
+
         if (isset($params['site_id'])) {
             $childNode = new Node('site-id', $params['site_id']);
             $params['filter'] = new Node('filter', $childNode);
-		}
+        }
 
-		parent::__construct($config, $params);
+        parent::__construct($config, $params);
     }
 
     /**

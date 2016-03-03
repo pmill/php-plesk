@@ -21,9 +21,9 @@ EOT;
     /**
      * @var array
      */
-	protected $default_params = array(
-		'ip_address' => null,
-	);
+    protected $default_params = array(
+        'ip_address' => null,
+    );
 
     /**
      * @var string
@@ -53,10 +53,11 @@ EOT;
     protected function processResponse($xml)
     {
         if ($xml->{'secret_key'}->create->result->status == 'error') {
-			throw new ApiRequestException((string)$xml->{'secret_key'}->create->result->errtext);
-		}
+            throw new ApiRequestException((string)$xml->{'secret_key'}->create->result->errtext,
+                (int)$xml->{'secret_key'}->create->result->errcode);
+        }
 
-		$this->key = (string)$xml->{'secret_key'}->create->result->key;
+        $this->key = (string)$xml->{'secret_key'}->create->result->key;
         return true;
     }
 }

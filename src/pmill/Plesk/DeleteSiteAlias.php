@@ -15,22 +15,22 @@ class DeleteSiteAlias extends BaseRequest
     </site-alias>
 </packet>
 EOT;
-    
+
     protected $default_params = array(
-		'filter'=>NULL,
-	);
+        'filter' => null,
+    );
 
-	public function __construct($config, $params=array())
-	{
-		if (isset($params['domain'])) {
-			$params['filter'] = new Node('name', $params['domain']);
-		}
-        
+    public function __construct($config, $params = array())
+    {
+        if (isset($params['domain'])) {
+            $params['filter'] = new Node('name', $params['domain']);
+        }
+
         if (isset($params['id'])) {
-			$params['filter'] = new Node('id', $params['id']);
-		}
+            $params['filter'] = new Node('id', $params['id']);
+        }
 
-		parent::__construct($config, $params);
+        parent::__construct($config, $params);
     }
 
     /**
@@ -41,9 +41,10 @@ EOT;
     {
         $result = $xml->{'site-alias'}->delete->result;
 
-        if ($result->status == 'error')
-            throw new ApiRequestException((string)$result->errtext);
+        if ($result->status == 'error') {
+            throw new ApiRequestException((string)$result->errtext, (int)$result->errcode);
+        }
 
-        return TRUE;
+        return true;
     }
 }

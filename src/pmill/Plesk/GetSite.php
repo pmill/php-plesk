@@ -19,9 +19,9 @@ class GetSite extends BaseRequest
 </packet>
 EOT;
 
-	protected $default_params = array(
-		'domain'=>NULL,
-	);
+    protected $default_params = array(
+        'domain' => null,
+    );
 
     /**
      * Process the response from Plesk
@@ -31,24 +31,26 @@ EOT;
     {
         $site = $xml->domain->get->result;
 
-        if ((string)$site->status == 'error')
-            throw new ApiRequestException((string)$site->errtext);
-        if ((string)$site->result->status == 'error')
-            throw new ApiRequestException((string)$site->result->errtext);
+        if ((string)$site->status == 'error') {
+            throw new ApiRequestException((string)$site->errtext, (int)$site->errcode);
+        }
+        if ((string)$site->result->status == 'error') {
+            throw new ApiRequestException((string)$site->result->errtext, (int)$site->result->errcode);
+        }
 
-		$hosting_type = (string)$site->data->gen_info->htype;
+        $hosting_type = (string)$site->data->gen_info->htype;
 
         return array(
-            'id'=>(string)$site->id,
-			'status'=>(string)$site->status,
-			'created'=>(string)$site->data->gen_info->cr_date,
-			'name'=>(string)$site->data->gen_info->name,
-			'ip'=>(string)$site->data->gen_info->dns_ip_address,
-			'hosting_type'=>$hosting_type,
-			'ip_address'=>(string)$site->data->hosting->{$hosting_type}->ip_address,
-			'www_root'=>$this->findHostingProperty($site->data->hosting->{$hosting_type}, 'www_root'),
-			'ftp_username'=>$this->findHostingProperty($site->data->hosting->{$hosting_type}, 'ftp_login'),
-			'ftp_password'=>$this->findHostingProperty($site->data->hosting->{$hosting_type}, 'ftp_password'),
+            'id' => (string)$site->id,
+            'status' => (string)$site->status,
+            'created' => (string)$site->data->gen_info->cr_date,
+            'name' => (string)$site->data->gen_info->name,
+            'ip' => (string)$site->data->gen_info->dns_ip_address,
+            'hosting_type' => $hosting_type,
+            'ip_address' => (string)$site->data->hosting->{$hosting_type}->ip_address,
+            'www_root' => $this->findHostingProperty($site->data->hosting->{$hosting_type}, 'www_root'),
+            'ftp_username' => $this->findHostingProperty($site->data->hosting->{$hosting_type}, 'ftp_login'),
+            'ftp_password' => $this->findHostingProperty($site->data->hosting->{$hosting_type}, 'ftp_password'),
         );
     }
 
@@ -56,13 +58,13 @@ EOT;
 	 * Helper function to search an XML tree for a specific property
 	 * @return string
 	 */
-	protected function findHostingProperty($node, $key)
-	{
-		foreach($node->children() AS $property)
-		{
-			if ($property->name == $key)
-				return (string)$property->value;
-		}
-		return NULL;
+    protected function findHostingProperty($node, $key)
+    {
+        foreach ($node->children() AS $property) {
+            if ($property->name == $key) {
+                return (string)$property->value;
+            }
+        }
+        return null;
     }
 }

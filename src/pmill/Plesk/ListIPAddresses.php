@@ -18,19 +18,19 @@ EOT;
      */
     protected function processResponse($xml)
     {
-    	if ((string)$xml->ip->get->result->status == 'error') {
-			throw new ApiRequestException((string)$xml->ip->get->result->errtext);
-		}
+        if ((string)$xml->ip->get->result->status == 'error') {
+            throw new ApiRequestException((string)$xml->ip->get->result->errtext);
+        }
 
         $result = array();
 
         foreach ($xml->ip->get->result->addresses->children() AS $ip) {
             $result[] = array(
-                'ip_address'=>(string)$ip->ip_address,
-                'netmask'=>(string)$ip->netmask,
-                'type'=>(string)$ip->type,
-                'interface'=>(string)$ip->interface,
-                'is_default'=>isset($ip->default),
+                'ip_address' => (string)$ip->ip_address,
+                'netmask' => (string)$ip->netmask,
+                'type' => (string)$ip->type,
+                'interface' => (string)$ip->interface,
+                'is_default' => isset($ip->default),
             );
         }
 

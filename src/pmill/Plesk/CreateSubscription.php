@@ -34,15 +34,15 @@ class CreateSubscription extends BaseRequest
 </packet>
 EOT;
 
-	protected $default_params = array(
-		'domain_name'=>NULL,
-		'ip_address'=>NULL,
-		'username'=>NULL,
-		'password'=>NULL,
-		'owner_id'=>NULL,
-		'service_plan_id'=>NULL,
-		'status'=>0,
-	);
+    protected $default_params = array(
+        'domain_name' => null,
+        'ip_address' => null,
+        'username' => null,
+        'password' => null,
+        'owner_id' => null,
+        'service_plan_id' => null,
+        'status' => 0,
+    );
 
     /**
      * Process the response from Plesk
@@ -51,10 +51,11 @@ EOT;
     protected function processResponse($xml)
     {
         if ($xml->webspace->add->result->status == 'error') {
-            throw new ApiRequestException((string)$xml->webspace->add->result->errtext);
+            throw new ApiRequestException((string)$xml->webspace->add->result->errtext,
+                (int)$xml->webspace->add->result->errcode);
         }
 
-		$this->id = (int)$xml->webspace->add->result->id;
-        return TRUE;
+        $this->id = (int)$xml->webspace->add->result->id;
+        return true;
     }
 }

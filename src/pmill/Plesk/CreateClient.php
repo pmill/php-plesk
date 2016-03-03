@@ -80,7 +80,7 @@ EOT;
         $result = $xml->customer->add->result;
 
         if ($result->status == 'error') {
-            throw new ApiRequestException((string)$result->errtext);
+            throw new ApiRequestException((string)$result->errtext, (int)$result->errcode);
         }
 
         $this->id = (int)$result->id;

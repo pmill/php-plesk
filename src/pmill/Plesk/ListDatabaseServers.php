@@ -21,13 +21,12 @@ EOT;
     protected function processResponse($xml)
     {
         $result = array();
-        foreach($xml->db_server->{'get-local'}->children() AS $node)
-        {
-        	$result[] = array(
-        		'status'=>(string)$node->status,
-        		'id'=>(int)$node->id,
-        		'type'=>(string)$node->type,
-        	);
+        foreach ($xml->db_server->{'get-local'}->children() AS $node) {
+            $result[] = array(
+                'status' => (string)$node->status,
+                'id' => (int)$node->id,
+                'type' => (string)$node->type,
+            );
         }
         return $result;
     }

@@ -3,7 +3,7 @@ namespace pmill\Plesk;
 
 class GetDatabaseUser extends BaseRequest
 {
-	public $xml_packet = <<<EOT
+    public $xml_packet = <<<EOT
 <?xml version="1.0"?>
 <packet version="1.4.2.0">
 <database>
@@ -16,25 +16,25 @@ class GetDatabaseUser extends BaseRequest
 </packet>
 EOT;
 
-	/**
-	 * @var array
-	 */
-	protected $default_params = array(
-		'database_id'	=> NULL,
-	);
+    /**
+     * @var array
+     */
+    protected $default_params = array(
+        'database_id' => null,
+    );
 
-	/**
-    * @param string $xml
-    * @return bool
-    */
-	protected function processResponse($xml)
+    /**
+     * @param string $xml
+     * @return bool
+     */
+    protected function processResponse($xml)
     {
         if ($xml->database->{'get-default-user'}->result->status == 'error') {
-		 	return false;
-		}
-        
+            return false;
+        }
+
         $this->id = (int)$xml->database->{'get-default-user'}->result->id;
-        return TRUE;
+        return true;
     }
 
 }

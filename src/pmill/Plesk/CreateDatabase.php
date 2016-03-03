@@ -16,28 +16,29 @@ class CreateDatabase extends BaseRequest
     </database>
 </packet>
 EOT;
-    
+
     /**
-    * @var array
-    */
+     * @var array
+     */
     protected $default_params = array(
-        'subscription_id' => NULL,
-        'server_id' => NULL,
-        'name' => NULL,
+        'subscription_id' => null,
+        'server_id' => null,
+        'name' => null,
         'type' => 'mysql'
     );
-    
+
     /**
-    * @param string $xml
-    * @return bool
-    */
+     * @param string $xml
+     * @return bool
+     */
     protected function processResponse($xml)
     {
         if ($xml->database->{'add-db'}->result->status == 'error') {
-            throw new ApiRequestException((string)$xml->database->{'add-db'}->result->errtext);
+            throw new ApiRequestException((string)$xml->database->{'add-db'}->result->errtext,
+                (int)$xml->database->{'add-db'}->result->errcode);
         }
-        
+
         $this->id = (int)$xml->database->{'add-db'}->result->id;
-        return TRUE;
+        return true;
     }
 }

@@ -42,9 +42,9 @@ EOT;
         $result = $xml->customer->del->result;
 
         if ($result->status == 'error') {
-            throw new ApiRequestException((string)$result->errtext);
+            throw new ApiRequestException((string)$result->errtext, (int)$result->errcode);
         }
 
-        return TRUE;
+        return true;
     }
 }

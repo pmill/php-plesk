@@ -17,7 +17,7 @@ class GetSubdomain extends BaseRequest
 EOT;
 
     protected $default_params = array(
-        'name'=>NULL,
+        'name' => null,
     );
 
     /**
@@ -29,22 +29,22 @@ EOT;
         $subdomain = $xml->subdomain->get->result;
 
         if ((string)$subdomain->status == 'error') {
-            throw new ApiRequestException((string)$subdomain->errtext);
+            throw new ApiRequestException((string)$subdomain->errtext, (int)$subdomain->errcode);
         }
 
         if ((string)$subdomain->result->status == 'error') {
-            throw new ApiRequestException((string)$subdomain->result->errtext);
+            throw new ApiRequestException((string)$subdomain->result->errtext, (int)$subdomain->result->errcode);
         }
 
         return array(
-			'id'=>(int)$subdomain->id,
-			'status'=>(string)$subdomain->status,
-			'parent'=>(string)$subdomain->data->parent,
-			'name'=>(string)$subdomain->data->name,
-			'php'=>(string)$this->findHostingProperty($subdomain->data, 'php'),
-			'php_handler_type'=>(string)$this->findHostingProperty($subdomain->data, 'php_handler_type'),
-			'www_root'=>(string)$this->findHostingProperty($subdomain->data, 'www_root'),
-		);
+            'id' => (int)$subdomain->id,
+            'status' => (string)$subdomain->status,
+            'parent' => (string)$subdomain->data->parent,
+            'name' => (string)$subdomain->data->name,
+            'php' => (string)$this->findHostingProperty($subdomain->data, 'php'),
+            'php_handler_type' => (string)$this->findHostingProperty($subdomain->data, 'php_handler_type'),
+            'www_root' => (string)$this->findHostingProperty($subdomain->data, 'www_root'),
+        );
     }
 
     /*
@@ -53,11 +53,11 @@ EOT;
      */
     protected function findHostingProperty($node, $key)
     {
-        foreach($node->children() AS $property)
-        {
-            if ($property->name == $key)
+        foreach ($node->children() AS $property) {
+            if ($property->name == $key) {
                 return (string)$property->value;
+            }
         }
-        return NULL;
+        return null;
     }
 }

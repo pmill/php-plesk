@@ -16,21 +16,21 @@ class DeleteSubdomain extends BaseRequest
 </packet>
 EOT;
 
-	protected $default_params = array(
-		'filter'=>NULL,
-	);
+    protected $default_params = array(
+        'filter' => null,
+    );
 
-	public function __construct($config, $params=array())
-	{
-		if (isset($params['subdomain'])) {
+    public function __construct($config, $params = array())
+    {
+        if (isset($params['subdomain'])) {
             $params['filter'] = new Node('name', $params['subdomain']);
-		}
-        
+        }
+
         if (isset($params['id'])) {
             $params['filter'] = new Node('id', $params['id']);
-		}
+        }
 
-		parent::__construct($config, $params);
+        parent::__construct($config, $params);
     }
 
     /**
@@ -41,9 +41,10 @@ EOT;
     {
         $result = $xml->subdomain->del->result;
 
-        if ($result->status == 'error')
-            throw new ApiRequestException((string)$result->errtext);
+        if ($result->status == 'error') {
+            throw new ApiRequestException((string)$result->errtext, (int)$result->errcode);
+        }
 
-        return TRUE;
+        return true;
     }
 }

@@ -21,28 +21,27 @@ class CreateSiteAlias extends BaseRequest
 </packet>
 EOT;
 
-	protected $default_params = array(
-		'site_id'=>NULL,
-		'alias'=>NULL,
-		'web_enabled'=>1,
-		'mail_enabled'=>0,
-		'tomcat_enabled'=>0,
-	);
+    protected $default_params = array(
+        'site_id' => null,
+        'alias' => null,
+        'web_enabled' => 1,
+        'mail_enabled' => 0,
+        'tomcat_enabled' => 0,
+    );
 
     public function __construct($config, $params)
     {
         if (!isset($params['site_id'])) {
             if (is_int($params['domain'])) {
                 $params['site_id'] = $params['domain'];
-            }
-            else {
+            } else {
                 $request = new GetSite($config, $params);
                 $info = $request->process();
                 $params['site_id'] = $info['id'];
             }
         }
-        
-    	parent::__construct($config, $params);
+
+        parent::__construct($config, $params);
     }
 
     /**
@@ -53,10 +52,11 @@ EOT;
     {
         $result = $xml->{'site-alias'}->create->result;
 
-        if ($result->status == 'error')
-            throw new ApiRequestException((string)$result->errtext);
+        if ($result->status == 'error') {
+            throw new ApiRequestException((string)$result->errtext, (int)$result->errcode);
+        }
 
         $this->id = (int)$result->id;
-        return TRUE;
+        return true;
     }
 }

@@ -17,20 +17,20 @@ class ListEmailAddresses extends BaseRequest
 </packet>
 EOT;
 
-	protected $default_params = array(
-        'site_id'=>NULL,
-	);
+    protected $default_params = array(
+        'site_id' => null,
+    );
 
-	public function __construct($config, $params)
-	{
+    public function __construct($config, $params)
+    {
         if (isset($params['domain'])) {
-            $request = new GetSite($config, array('domain'=>$params['domain']));
+            $request = new GetSite($config, array('domain' => $params['domain']));
             $info = $request->process();
 
             $params['site_id'] = $info['id'];
-        }   
-        
-		parent::__construct($config, $params);         
+        }
+
+        parent::__construct($config, $params);
     }
 
     /**
@@ -40,15 +40,14 @@ EOT;
     protected function processResponse($xml)
     {
         $result = array();
-        foreach($xml->mail->get_info->children() AS $node)
-        {
-        	$result[] = array(
-        		'status'=>(string)$node->status,
-        		'id'=>(int)$node->mailname->id,
-        		'username'=>(string)$node->mailname->name,
-        		'enabled'=>(bool)$node->mailname->mailbox->enabled,
-        		'password'=>(string)$node->mailname->password->value,
-        	);
+        foreach ($xml->mail->get_info->children() AS $node) {
+            $result[] = array(
+                'status' => (string)$node->status,
+                'id' => (int)$node->mailname->id,
+                'username' => (string)$node->mailname->name,
+                'enabled' => (bool)$node->mailname->mailbox->enabled,
+                'password' => (string)$node->mailname->password->value,
+            );
         }
         return $result;
     }

@@ -16,9 +16,9 @@ class DeleteDatabase extends BaseRequest
 </packet>
 EOT;
 
-	protected $default_params = array(
-		'id'=>NULL,
-	);
+    protected $default_params = array(
+        'id' => null,
+    );
 
     /**
      * Process the response from Plesk
@@ -28,9 +28,10 @@ EOT;
     {
         $result = $xml->database->{'del-db'}->result;
 
-        if ($result->status == 'error')
-            throw new ApiRequestException((string)$result->errtext);
+        if ($result->status == 'error') {
+            throw new ApiRequestException((string)$result->errtext, (int)$result->errcode);
+        }
 
-        return TRUE;
+        return true;
     }
 }

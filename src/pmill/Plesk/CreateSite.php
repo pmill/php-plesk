@@ -37,23 +37,23 @@ class CreateSite extends BaseRequest
 </packet>
 EOT;
 
-	protected $default_params = array(
-		'domain'=>NULL,
-		'subscription_id'=>NULL,
-		'php'=>TRUE,
-		'php_handler_id'=>'fastcgi',
-		'webstat'=>'none',
-		'www_root'=>NULL,
-	);
+    protected $default_params = array(
+        'domain' => null,
+        'subscription_id' => null,
+        'php' => true,
+        'php_handler_id' => 'fastcgi',
+        'webstat' => 'none',
+        'www_root' => null,
+    );
 
-	public function __construct($config, $params=array())
-	{
-		if(!isset($params['www_root'])) {
-			$params['www_root'] = $params['domain'];
-		}
+    public function __construct($config, $params = array())
+    {
+        if (!isset($params['www_root'])) {
+            $params['www_root'] = $params['domain'];
+        }
 
-		parent::__construct($config, $params);
-	}
+        parent::__construct($config, $params);
+    }
 
     /**
      * Process the response from Plesk
@@ -62,10 +62,11 @@ EOT;
     protected function processResponse($xml)
     {
         if ($xml->site->add->result->status == 'error') {
-			throw new ApiRequestException((string)$xml->site->add->result->errtext);
-		}
+            throw new ApiRequestException((string)$xml->site->add->result->errtext,
+                (int)$xml->site->add->result->errcode);
+        }
 
-		$this->id = (int)$xml->site->add->result->id;
-        return TRUE;
+        $this->id = (int)$xml->site->add->result->id;
+        return true;
     }
 }

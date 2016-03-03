@@ -45,7 +45,7 @@ EOT;
 
         $properties = array();
 
-        foreach (array('www_root') AS $key) {
+        foreach (array('www_root') as $key) {
             if (isset($params[$key])) {
                 $properties[$key] = $params[$key];
             }
@@ -64,9 +64,10 @@ EOT;
     {
         $result = $xml->subdomain->set->result;
 
-        if ($result->status == 'error')
-            throw new ApiRequestException((string)$result->errtext);
+        if ($result->status == 'error') {
+            throw new ApiRequestException((string)$result->errtext, (int)$result->errcode);
+        }
 
-        return TRUE;
+        return true;
     }
 }

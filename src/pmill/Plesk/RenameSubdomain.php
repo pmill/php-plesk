@@ -16,19 +16,19 @@ class RenameSubdomain extends BaseRequest
 EOT;
 
     protected $default_params = array(
-        'id'=>NULL,
-        'name'=>NULL, 
+        'id' => null,
+        'name' => null,
     );
 
     public function __construct($config, $params)
     {
         if (isset($params['subdomain'])) {
-            $request = new GetSubdomain($config, array('name'=>$params['subdomain']));
+            $request = new GetSubdomain($config, array('name' => $params['subdomain']));
             $info = $request->process();
 
             $this->params['id'] = $info['id'];
         }
-        
+
         parent::__construct($config, $params);
     }
 
@@ -40,9 +40,10 @@ EOT;
     {
         $result = $xml->subdomain->rename->result;
 
-        if ($result->status == 'error')
-            throw new ApiRequestException((string)$result->errtext);
+        if ($result->status == 'error') {
+            throw new ApiRequestException((string)$result->errtext, (int)$result->errcode);
+        }
 
-        return TRUE;
+        return true;
     }
 }

@@ -35,22 +35,23 @@ class CreateSubdomain extends BaseRequest
 </packet>
 EOT;
 
-	protected $default_params = array(
-		'domain'=>NULL,
-		'subdomain'=>NULL,
-		'www_root'=>NULL,
-		'ftp_username'=>'',
-		'ftp_password'=>'',
-		'ssl'=>TRUE,
-		'php'=>TRUE,
-	);
+    protected $default_params = array(
+        'domain' => null,
+        'subdomain' => null,
+        'www_root' => null,
+        'ftp_username' => '',
+        'ftp_password' => '',
+        'ssl' => true,
+        'php' => true,
+    );
 
     public function __construct($config, $params)
     {
-    	parent::__construct($config, $params);
+        parent::__construct($config, $params);
 
-    	if (substr($this->params['www_root'], 0, 1) !== '/')
-    		$this->params['www_root'] = '/'.$this->params['www_root'];
+        if (substr($this->params['www_root'], 0, 1) !== '/') {
+            $this->params['www_root'] = '/' . $this->params['www_root'];
+        }
     }
 
     /**
@@ -61,10 +62,11 @@ EOT;
     {
         $result = $xml->subdomain->add->result;
 
-        if ($result->status == 'error')
-            throw new ApiRequestException((string)$result->errtext);
+        if ($result->status == 'error') {
+            throw new ApiRequestException((string)$result->errtext, (int)$result->errcode);
+        }
 
         $this->id = (int)$result->id;
-        return TRUE;
+        return true;
     }
 }

@@ -16,9 +16,9 @@ class DeleteSite extends BaseRequest
 </packet>
 EOT;
 
-	protected $default_params = array(
-		'id'=>NULL,
-	);
+    protected $default_params = array(
+        'id' => null,
+    );
 
     /**
      * Process the response from Plesk
@@ -27,9 +27,9 @@ EOT;
     protected function processResponse($xml)
     {
         if ($xml->site->del->result->status == 'error') {
-			throw new ApiRequestException((string)$xml->site->del->result->errtext);
-		}
+            throw new ApiRequestException((string)$xml->site->del->result->errtext, (int)$xml->site->del->result->errcode);
+        }
 
-        return TRUE;
+        return true;
     }
 }
