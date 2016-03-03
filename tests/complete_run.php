@@ -1,10 +1,11 @@
 <?php
-
 require_once("../examples/SplClassLoader.php");
 
-function exception_error_handler($errno, $errstr, $errfile, $errline ) {
+function exception_error_handler($errno, $errstr, $errfile, $errline)
+{
     throw new ErrorException($errstr, $errno, 0, $errfile, $errline);
 }
+
 set_error_handler("exception_error_handler");
 
 $classLoader = new SplClassLoader('pmill\Plesk', '../src');
@@ -59,10 +60,11 @@ function random_string($length = 8)
  */
 
 $config = array(
-    'host' => 'example.com',
-    'username' => 'admin',
-    'password' => 'password',
+    'host'=>'example.com',
+    'username'=>'username',
+    'password'=>'password',
 );
+
 
 /*
 * Choose which tests to run, try not to do them all at the same time, it can be quite slow
@@ -410,8 +412,7 @@ try {
 
         $request = new \pmill\Plesk\UpdateSubdomain($config, array(
             'id' => $data['subdomain_id'],
-            'fpt_username' => random_string(),
-            'fpt_password' => random_string(),
+            'www_root' => '/subdomains/' . strtolower($data['subdomain']) . '2',
         ));
         $info = $request->process();
         echo "Subdomain updated: " . $data['subdomain'] . PHP_EOL;
@@ -567,6 +568,58 @@ try {
     ));
     $info = $request->process();
     echo "Subscription deleted: " . $data['subscription_id'] . PHP_EOL;
+
+    /**
+     * 32. Creates a secret key
+     */
+
+    $request = new \pmill\Plesk\CreateSecretKey($config, [
+        'ip_address' => file_get_contents('https://api.ipify.org'),
+    ]);
+    $info = $request->process();
+    $data['secret_key'] = $request->key;
+    echo "Secret Key created: " . $request->key . PHP_EOL;
+
+    /**
+     * 33. Lists secret keys (login with secret key)
+     */
+
+    $request = new \pmill\Plesk\ListSecretKeys(['key' => $data['secret_key'], 'host' => $config['host']]);
+    $keys = $request->process();
+
+    $secret_key_found = false;
+    foreach ($keys as $key) {
+        if ($key['key'] == $data['secret_key']) {
+            $secret_key_found = true;
+        }
+    }
+
+    if (!$secret_key_found) {
+        throw new Exception("Couldn't find created secret_key");
+    }
+
+    /**
+     * 34. Delete secret key
+     */
+
+    $request = new \pmill\Plesk\DeleteSecretKey($config, [
+        'key' => $data['secret_key'],
+    ]);
+    $request->process();
+
+    $request = new \pmill\Plesk\ListSecretKeys($config);
+    $keys = $request->process();
+
+    $secret_key_found = false;
+    foreach ($keys as $key) {
+        if ($key['key'] == $data['secret_key']) {
+            $secret_key_found = true;
+        }
+    }
+
+    if ($secret_key_found) {
+        throw new Exception("Failed to delete secret_key");
+    }
 
 } catch (Exception $e) {
     throw $e;

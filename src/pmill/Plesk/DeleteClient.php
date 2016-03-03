@@ -16,21 +16,21 @@ class DeleteClient extends BaseRequest
 </packet>
 EOT;
 
-	protected $default_params = array(
-		'filter'=>NULL,
-	);
+    protected $default_params = array(
+        'filter' => null,
+    );
 
-	public function __construct($config, $params=array())
-	{
-		if(isset($params['username'])) {
-			$params['filter'] = '<login>'.$params['username'].'</login>';
-		}
+    public function __construct($config, $params = array())
+    {
+        if (isset($params['username'])) {
+            $params['filter'] = new Node('login', $params['username']);
+        }
 
-		if(isset($params['id'])) {
-			$params['filter'] = '<id>'.$params['id'].'</id>';
-		}
+        if (isset($params['id'])) {
+            $params['filter'] = new Node('id', $params['id']);
+        }
 
-		parent::__construct($config, $params);
+        parent::__construct($config, $params);
     }
 
     /**
@@ -39,7 +39,7 @@ EOT;
      */
     protected function processResponse($xml)
     {
-    	$result = $xml->customer->del->result;
+        $result = $xml->customer->del->result;
 
         if ($result->status == 'error') {
             throw new ApiRequestException((string)$result->errtext);

@@ -42,6 +42,18 @@ class CurlHttpRequest implements HttpRequestContract
     }
 
     /**
+     * @param $key
+     */
+    public function setSecretKey($key)
+    {
+        curl_setopt($this->curl, CURLOPT_HTTPHEADER, [
+            "KEY: ".$key,
+            "HTTP_PRETTY_PRINT: TRUE",
+            "Content-Type: text/xml",
+        ]);
+    }
+
+    /**
      * @param $host
      */
     public function setupCurl($host)

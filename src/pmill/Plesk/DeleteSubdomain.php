@@ -23,11 +23,11 @@ EOT;
 	public function __construct($config, $params=array())
 	{
 		if (isset($params['subdomain'])) {
-			$params['filter'] = '<name>'.$params['subdomain'].'</name>';
+            $params['filter'] = new Node('name', $params['subdomain']);
 		}
         
         if (isset($params['id'])) {
-			$params['filter'] = '<id>'.$params['id'].'</id>';
+            $params['filter'] = new Node('id', $params['id']);
 		}
 
 		parent::__construct($config, $params);

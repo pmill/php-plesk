@@ -89,6 +89,10 @@ EOT;
             $this->http->setCredentials($this->config['username'], $this->config['password']);
         }
 
+        if (isset($this->config['key'])) {
+            $this->http->setSecretKey($this->config['key']);
+        }
+
         if (is_null($this->xml_packet) && file_exists($this->xml_filename)) {
             $this->xml_packet = file_get_contents($this->xml_filename);
         }
@@ -131,7 +135,7 @@ EOT;
      */
     protected function generatePropertyList(array $properties)
     {
-        return Xml::generatePropertyList($this->property_template, $properties);
+        return Xml::generatePropertyList($properties);
     }
 
     /**
@@ -198,7 +202,6 @@ EOT;
      */
     private function sendRequest($packet)
     {
-        echo $packet.PHP_EOL.PHP_EOL;
         $domdoc = new \DomDocument('1.0', 'UTF-8');
         if ($domdoc->loadXml($packet) === false) {
             $this->error = 'Failed to load payload';

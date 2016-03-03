@@ -23,11 +23,11 @@ EOT;
 	public function __construct($config, $params=array())
 	{
 		if (isset($params['domain'])) {
-			$params['filter'] = '<name>'.$params['domain'].'</name>';
+			$params['filter'] = new Node('name', $params['domain']);
 		}
         
         if (isset($params['id'])) {
-			$params['filter'] = '<id>'.$params['id'].'</id>';
+			$params['filter'] = new Node('id', $params['id']);
 		}
 
 		parent::__construct($config, $params);
