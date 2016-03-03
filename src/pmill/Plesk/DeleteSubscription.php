@@ -3,6 +3,9 @@ namespace pmill\Plesk;
 
 class DeleteSubscription extends BaseRequest
 {
+    /**
+     * @var string
+     */
     public $xml_packet = <<<EOT
 <?xml version="1.0"?>
 <packet>
@@ -16,22 +19,26 @@ class DeleteSubscription extends BaseRequest
 </packet>
 EOT;
 
-	protected $default_params = array(
-		'id'=>NULL,
-	);
+    /**
+     * @var array
+     */
+    protected $default_params = array(
+        'id' => null,
+    );
 
     /**
-     * Process the response from Plesk
+     * @param $xml
      * @return bool
+     * @throws ApiRequestException
      */
     protected function processResponse($xml)
     {
-    	$webspace = $xml->webspace->del;
+        $webspace = $xml->webspace->del;
 
         if ($webspace->result->status == 'error') {
             throw new ApiRequestException($webspace->result);
         }
 
-        return TRUE;
+        return true;
     }
 }

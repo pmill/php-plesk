@@ -53,7 +53,7 @@ EOT;
     protected function processResponse($xml)
     {
         if ($xml->{'secret_key'}->create->result->status == 'error') {
-            throw new ApiRequestException($xml->{'secret_key'}->create->result->errtext);
+            throw new ApiRequestException($xml->{'secret_key'}->create->result);
         }
 
         $this->key = (string)$xml->{'secret_key'}->create->result->key;
