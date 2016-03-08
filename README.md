@@ -76,6 +76,12 @@ Unversioned (13 Apr 2013)
 *   Added functionality for databases 
 *   Updated test script
 
+0.5.0 (08/03/2016)
+
+*   Added secret key functionality
+*   Updated error handling to expose Plesk error code
+*   Added html entity escaping
+
 Copyright and License
 ---------------------
 
