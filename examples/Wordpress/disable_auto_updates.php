@@ -9,7 +9,7 @@ $params = [
     'id' => 1,
 ];
 
-$request = new \pmill\Plesk\Wordpress\EnableAutoUpdates($config, $params);
+$request = new \pmill\Plesk\Wordpress\DisableAutoUpdates($config, $params);
 
 $info = $request->process();
 var_dump($info);
