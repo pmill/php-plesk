@@ -71,6 +71,10 @@ class Node
             $this->value = Xml::sanitize($this->value);
         }
 
+        if (is_bool($this->value)) {
+            $this->value = $this->value ? 'true' : 'false';
+        }
+
         return sprintf('<%s>%s</%s>', $this->tag, (string)$this->value, $this->tag);
     }
 }
