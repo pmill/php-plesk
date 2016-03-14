@@ -1,6 +1,11 @@
 <?php
-namespace pmill\Plesk;
+namespace pmill\Plesk\APS;
 
+use pmill\Plesk\ApiRequestException;
+use pmill\Plesk\BaseRequest;
+use pmill\Plesk\HttpRequestContract;
+use pmill\Plesk\Node;
+use pmill\Plesk\NodeList;
 use SimpleXMLElement;
 
 class ListAvailablePackages extends BaseRequest
