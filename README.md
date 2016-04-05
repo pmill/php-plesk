@@ -20,6 +20,7 @@ The following features are currently supported:
 *   List database servers
 *   List/add/delete databases
 *   Add database users
+*   Further functionality can be seen in the examples folder
 *   Email dev.pmill@gmail.com with requests for exposing further functionality
 
 Requirements
@@ -81,6 +82,13 @@ Unversioned (13 Apr 2013)
 *   Added secret key functionality
 *   Updated error handling to expose Plesk error code
 *   Added html entity escaping
+
+0.5.1 (05/04/2016)
+
+*   Added mail preferences functionality
+*   Added wordpress functionality
+*   Added APS functionality
+*   Added ssl certificate functionality
 
 Copyright and License
 ---------------------
