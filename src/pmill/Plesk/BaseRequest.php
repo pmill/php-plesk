@@ -62,6 +62,11 @@ EOT;
     public $error;
 
     /**
+     * @var string
+     */
+    public $xml_response;
+
+    /**
      * @param $xml
      * @return string
      */
@@ -161,6 +166,7 @@ EOT;
             $response = $this->sendRequest($this->getPacket());
 
             if ($response !== false) {
+                $this->xml_response = $response;
                 $responseXml = Xml::convertStringToXml($response);
                 $this->checkResponse($responseXml);
 
