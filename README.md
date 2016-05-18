@@ -90,6 +90,11 @@ Unversioned (13 Apr 2013)
 *   Added APS functionality
 *   Added ssl certificate functionality
 
+0.5.2 (18/05/2016)
+
+*   Updated ListSubscriptions to retrieve plan guids
+*   Updated GetServicePlan to accept 'guid' as a filter option
+
 Copyright and License
 ---------------------
 
