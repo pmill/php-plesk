@@ -11,21 +11,53 @@ class GetServicePlan extends BaseRequest
 <service-plan>
 	<get>
 		<filter>
-			<id>{ID}</id>
+			{FILTER}
 		</filter>
 	</get>
 </service-plan>
 </packet>
 EOT;
 
-    protected $default_params = array(
-        'id' => null,
-    );
+    /**
+     * @var array
+     */
+    protected $default_params = [
+        'filter' => '',
+    ];
 
     /**
-     * Process the response from Plesk
-     *
+     * @param array $config
+     * @param array $params
+     * @param HttpRequestContract $http
+     * @throws ApiRequestException
+     */
+    public function __construct(array $config, array $params = [], HttpRequestContract $http = null)
+    {
+        $filterChildNodes = [];
+
+        foreach (['owner-id', 'owner-login', 'guid', 'id'] as $nodeName) {
+            if (isset($params[$nodeName])) {
+                if (!is_array($params[$nodeName])) {
+                    $params[$nodeName] = [$params[$nodeName]];
+                }
+
+                foreach ($params[$nodeName] as $value) {
+                    $filterChildNodes[] = new Node($nodeName, $value);
+                }
+            }
+        }
+
+        $params = [
+            'filter' => new NodeList($filterChildNodes),
+        ];
+
+        parent::__construct($config, $params, $http);
+    }
+
+    /**
+     * @param $xml
      * @return array
+     * @throws ApiRequestException
      */
     protected function processResponse($xml)
     {

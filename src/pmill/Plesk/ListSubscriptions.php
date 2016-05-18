@@ -13,6 +13,7 @@ class ListSubscriptions extends BaseRequest
         {FILTER}
         <dataset>
 			<hosting/>
+			<subscriptions/>
 		</dataset>
     </get>
 </webspace>
@@ -41,24 +42,37 @@ EOT;
      */
     protected function processResponse($xml)
     {
-        $result = array();
+        $result = [];
 
         for ($i = 0; $i < count($xml->webspace->get->result); $i++) {
             $webspace = $xml->webspace->get->result[$i];
 
-            $hosting = array();
-            foreach ($webspace->data->hosting->children() AS $host) {
+            $hosting = [];
+            foreach ($webspace->data->hosting->children() as $host) {
                 $hosting[$host->getName()] = Xml::getProperties($host);
             }
 
-            $result[] = array(
+            $subscriptions = [];
+            foreach ($webspace->data->subscriptions->children() as $subscription) {
+                $subscriptions[] = [
+                    'locked' => (bool)$subscription->locked,
+                    'synchronized' => (bool)$subscription->synchronized,
+                    'plan-guid' => (string)$subscription->plan->{"plan-guid"},
+                ];
+            }
+
+            $result[] = [
                 'id' => (string)$webspace->id,
                 'status' => (string)$webspace->status,
                 'created' => (string)$webspace->data->gen_info->cr_date,
                 'name' => (string)$webspace->data->gen_info->name,
                 'owner_id' => (string)$webspace->data->gen_info->{"owner-id"},
                 'hosting' => $hosting,
-            );
+                'real_size' => (int)$webspace->data->gen_info->real_size,
+                'dns_ip_address' => (string)$webspace->data->gen_info->dns_ip_address,
+                'htype' => (string)$webspace->data->gen_info->htype,
+                'subscriptions' => $subscriptions,
+            ];
         }
 
         return $result;

@@ -62,6 +62,11 @@ EOT;
     public $error;
 
     /**
+     * @var string
+     */
+    public $xml_response;
+
+    /**
      * @param $xml
      * @return string
      */
@@ -107,6 +112,7 @@ EOT;
      * class declaration
      *
      * @return bool
+     * @throws ApiRequestException
      */
     protected function check_params()
     {
@@ -160,6 +166,7 @@ EOT;
             $response = $this->sendRequest($this->getPacket());
 
             if ($response !== false) {
+                $this->xml_response = $response;
                 $responseXml = Xml::convertStringToXml($response);
                 $this->checkResponse($responseXml);
 
@@ -223,7 +230,7 @@ EOT;
     private function checkResponse(SimpleXMLElement $response)
     {
         if ($response->system->status === 'error') {
-            throw new ApiException($response->system);
+            throw new ApiRequestException($response->system);
         }
     }
 }
