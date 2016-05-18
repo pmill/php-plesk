@@ -107,6 +107,7 @@ EOT;
      * class declaration
      *
      * @return bool
+     * @throws ApiRequestException
      */
     protected function check_params()
     {
@@ -223,7 +224,7 @@ EOT;
     private function checkResponse(SimpleXMLElement $response)
     {
         if ($response->system->status === 'error') {
-            throw new ApiException($response->system);
+            throw new ApiRequestException($response->system);
         }
     }
 }
