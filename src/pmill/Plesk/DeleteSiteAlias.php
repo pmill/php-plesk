@@ -26,6 +26,10 @@ EOT;
             $params['filter'] = new Node('name', $params['domain']);
         }
 
+        if (isset($params['alias'])) {
+            $params['filter'] = new Node('name', $params['alias']);
+        }
+
         if (isset($params['id'])) {
             $params['filter'] = new Node('id', $params['id']);
         }

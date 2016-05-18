@@ -96,6 +96,7 @@ Unversioned (13 Apr 2013)
 
 *   Updated ListSubscriptions to retrieve plan guids
 *   Updated GetServicePlan to accept 'guid' as a filter option
+*   Updated DeleteSiteAlias to accept 'alias' as a filter option
 
 Copyright and License
 ---------------------
