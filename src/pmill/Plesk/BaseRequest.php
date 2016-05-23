@@ -57,7 +57,7 @@ EOT;
     public $request_header;
 
     /**
-     * @var string|Exception
+     * @var string|\Exception
      */
     public $error;
 
