@@ -51,8 +51,10 @@ EOT;
     protected function processResponse($xml)
     {
         $result = [];
+        $itemCount = count($xml->site->get->result);
 
-        for ($i = 0; $i < count($xml->site->get->result); $i++) {
+
+        for ($i = 0; $i < $itemCount; $i++) {
             $site = $xml->site->get->result[$i];
             $hosting_type = (string)$site->data->gen_info->htype;
 
