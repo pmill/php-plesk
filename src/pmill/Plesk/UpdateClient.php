@@ -27,7 +27,7 @@ EOT;
     /**
      * @var array
      */
-    protected $default_params = array(
+    protected $default_params = [
         'username' => '',
         'company_name' => '',
         'contact_name' => '',
@@ -41,12 +41,12 @@ EOT;
         'state' => '',
         'post_code' => '',
         'country' => '',
-    );
+    ];
 
     /**
      * @var array
      */
-    protected $node_mapping = array(
+    protected $node_mapping = [
         'password' => 'passwd',
         'status' => 'status',
         'phone' => 'phone',
@@ -57,7 +57,7 @@ EOT;
         'state' => 'state',
         'post_code' => 'pcode',
         'country' => 'country',
-    );
+    ];
 
     /**
      * UpdateClient constructor.

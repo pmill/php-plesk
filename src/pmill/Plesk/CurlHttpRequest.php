@@ -65,7 +65,7 @@ class CurlHttpRequest implements HttpRequestContract
         curl_setopt($this->curl, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($this->curl, CURLOPT_SSL_VERIFYHOST, false);
         curl_setopt($this->curl, CURLINFO_HEADER_OUT, true);
-        curl_setopt($this->curl, CURLOPT_HTTPHEADER, array('Content-Type: text/xml'));
+        curl_setopt($this->curl, CURLOPT_HTTPHEADER, ['Content-Type: text/xml']);
     }
 
     /**

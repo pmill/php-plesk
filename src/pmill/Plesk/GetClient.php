@@ -1,8 +1,6 @@
 <?php
 namespace pmill\Plesk;
 
-use pmill\Plesk\Helper\Xml;
-
 class GetClient extends BaseRequest
 {
     /**
@@ -28,16 +26,16 @@ EOT;
     /**
      * @var array
      */
-    protected $default_params = array(
+    protected $default_params = [
         'filter' => null,
-    );
+    ];
 
     /**
      * GetClient constructor.
      * @param array $config
      * @param array $params
      */
-    public function __construct(array $config, $params = array())
+    public function __construct(array $config, $params = [])
     {
         if (isset($params['username'])) {
             $params['filter'] = new Node('login', $params['username']);
@@ -67,7 +65,7 @@ EOT;
             throw new ApiRequestException($client->result);
         }
 
-        return array(
+        return [
             'id' => (int)$client->id,
             'status' => (string)$client->status,
             'created' => (string)$client->data->gen_info->cr_date,
@@ -82,7 +80,7 @@ EOT;
             'post_code' => (string)$client->data->gen_info->pcode,
             'country' => (string)$client->data->gen_info->country,
             'locale' => (string)$client->data->gen_info->locale,
-            'stat' => array(
+            'stat' => [
                 'domains' => (int)$client->data->stat->active_domains,
                 'subdomains' => (int)$client->data->stat->subdomains,
                 'disk_space' => (int)$client->data->stat->disk_space,
@@ -90,7 +88,7 @@ EOT;
                 'databases' => (int)$client->data->stat->data_bases,
                 'traffic' => (int)$client->data->stat->traffic,
                 'traffic_prevday' => (int)$client->data->stat->traffic_prevday,
-            ),
-        );
+            ],
+        ];
     }
 }

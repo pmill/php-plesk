@@ -3,6 +3,9 @@ namespace pmill\Plesk;
 
 class ListSites extends BaseRequest
 {
+    /**
+     * @var string
+     */
     public $xml_packet = <<<EOT
 <?xml version="1.0"?>
 <packet version="1.6.3.0">
@@ -17,11 +20,19 @@ class ListSites extends BaseRequest
 </packet>
 EOT;
 
-    protected $default_params = array(
+    /**
+     * @var array
+     */
+    protected $default_params = [
         'filter' => '<filter/>',
-    );
+    ];
 
-    public function __construct(array $config, $params = array())
+    /**
+     * @param array $config
+     * @param array $params
+     * @throws ApiRequestException
+     */
+    public function __construct(array $config, $params = [])
     {
         $this->default_params['filter'] = new Node('filter');
 
@@ -34,18 +45,18 @@ EOT;
     }
 
     /**
-     * Process the response from Plesk
+     * @param $xml
      * @return array
      */
     protected function processResponse($xml)
     {
-        $result = array();
+        $result = [];
 
         for ($i = 0; $i < count($xml->site->get->result); $i++) {
             $site = $xml->site->get->result[$i];
             $hosting_type = (string)$site->data->gen_info->htype;
 
-            $result[] = array(
+            $result[] = [
                 'id' => (string)$site->id,
                 'status' => (string)$site->status,
                 'created' => (string)$site->data->gen_info->cr_date,
@@ -56,22 +67,25 @@ EOT;
                 'www_root' => $this->findHostingProperty($site->data->hosting->{$hosting_type}, 'www_root'),
                 'ftp_username' => $this->findHostingProperty($site->data->hosting->{$hosting_type}, 'ftp_login'),
                 'ftp_password' => $this->findHostingProperty($site->data->hosting->{$hosting_type}, 'ftp_password'),
-            );
+            ];
         }
+
         return $result;
     }
 
-    /*
-     * Helper function to search an XML tree for a specific property
-     * @return string
+    /**
+     * @param $node
+     * @param $key
+     * @return null|string
      */
     protected function findHostingProperty($node, $key)
     {
-        foreach ($node->children() AS $property) {
+        foreach ($node->children() as $property) {
             if ($property->name == $key) {
                 return (string)$property->value;
             }
         }
+
         return null;
     }
 }

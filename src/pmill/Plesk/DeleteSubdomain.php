@@ -3,6 +3,9 @@ namespace pmill\Plesk;
 
 class DeleteSubdomain extends BaseRequest
 {
+    /**
+     * @var string
+     */
     public $xml_packet = <<<EOT
 <?xml version="1.0"?>
 <packet version="1.5.2.0">
@@ -16,11 +19,19 @@ class DeleteSubdomain extends BaseRequest
 </packet>
 EOT;
 
-    protected $default_params = array(
+    /**
+     * @var array
+     */
+    protected $default_params = [
         'filter' => null,
-    );
+    ];
 
-    public function __construct($config, $params = array())
+    /**
+     * @param array $config
+     * @param array $params
+     * @throws ApiRequestException
+     */
+    public function __construct($config, $params = [])
     {
         if (isset($params['subdomain'])) {
             $params['filter'] = new Node('name', $params['subdomain']);
@@ -34,8 +45,9 @@ EOT;
     }
 
     /**
-     * Process the response from Plesk
+     * @param $xml
      * @return bool
+     * @throws ApiRequestException
      */
     protected function processResponse($xml)
     {

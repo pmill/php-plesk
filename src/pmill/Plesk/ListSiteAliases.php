@@ -3,6 +3,9 @@ namespace pmill\Plesk;
 
 class ListSiteAliases extends BaseRequest
 {
+    /**
+     * @var string
+     */
     public $xml_packet = <<<EOT
 <?xml version="1.0"?>
 <packet version="1.6.3.0">
@@ -14,11 +17,19 @@ class ListSiteAliases extends BaseRequest
 </packet>
 EOT;
 
-    protected $default_params = array(
+    /**
+     * @var array
+     */
+    protected $default_params = [
         'filter' => null,
-    );
+    ];
 
-    public function __construct($config, $params = array())
+    /**
+     * @param array $config
+     * @param array $params
+     * @throws ApiRequestException
+     */
+    public function __construct($config, $params = [])
     {
         $params['filter'] = new Node('filter');
 
@@ -36,15 +47,17 @@ EOT;
     }
 
     /**
-     * Process the response from Plesk
+     * @param $xml
      * @return array
      */
     protected function processResponse($xml)
     {
-        $result = array();
-        foreach ($xml->{"site-alias"}->get->result AS $alias) {
+        $result = [];
+
+        foreach ($xml->{"site-alias"}->get->result as $alias) {
             $result[(int)$alias->id] = (string)$alias->info->name;
         }
+
         return $result;
     }
 }

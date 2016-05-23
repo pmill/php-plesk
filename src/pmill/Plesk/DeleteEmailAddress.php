@@ -3,6 +3,9 @@ namespace pmill\Plesk;
 
 class DeleteEmailAddress extends BaseRequest
 {
+    /**
+     * @var string
+     */
     public $xml_packet = <<<EOT
 <?xml version="1.0"?>
 <packet version="1.6.3.0">
@@ -17,10 +20,18 @@ class DeleteEmailAddress extends BaseRequest
 </packet>
 EOT;
 
-    protected $default_params = array(
+    /**
+     * @var array
+     */
+    protected $default_params = [
         'email' => null,
-    );
+    ];
 
+    /**
+     * @param array $config
+     * @param array $params
+     * @throws ApiRequestException
+     */
     public function __construct($config, $params)
     {
         parent::__construct($config, $params);
@@ -31,7 +42,7 @@ EOT;
 
         list($username, $domain) = explode("@", $this->params['email']);
 
-        $request = new GetSite($config, array('domain' => $domain));
+        $request = new GetSite($config, ['domain' => $domain]);
         $info = $request->process();
 
         $this->params['site_id'] = $info['id'];
@@ -39,7 +50,7 @@ EOT;
     }
 
     /**
-     * Process the response from Plesk
+     * @param $xml
      * @return bool
      */
     protected function processResponse($xml)

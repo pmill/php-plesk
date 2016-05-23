@@ -3,7 +3,6 @@ namespace pmill\Plesk\APS;
 
 use pmill\Plesk\ApiRequestException;
 use pmill\Plesk\BaseRequest;
-use pmill\Plesk\Helper\MailPreferences;
 use pmill\Plesk\HttpRequestContract;
 use pmill\Plesk\Node;
 use pmill\Plesk\NodeList;

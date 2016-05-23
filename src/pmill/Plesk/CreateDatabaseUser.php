@@ -3,6 +3,9 @@ namespace pmill\Plesk;
 
 class CreateDatabaseUser extends BaseRequest
 {
+    /**
+     * @var string
+     */
     public $xml_packet = <<<EOT
 <?xml version="1.0"?>
 <packet version="1.6.5.0">
@@ -15,6 +18,11 @@ class CreateDatabaseUser extends BaseRequest
 </database>
 </packet>
 EOT;
+
+    /**
+     * @var int
+     */
+    public $id;
 
     /**
      * @var array
@@ -40,8 +48,9 @@ EOT;
     }
 
     /**
-     * @param string $xml
+     * @param $xml
      * @return bool
+     * @throws ApiRequestException
      */
     protected function processResponse($xml)
     {

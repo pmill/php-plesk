@@ -57,7 +57,7 @@ EOT;
     public $request_header;
 
     /**
-     * @var string
+     * @var string|Exception
      */
     public $error;
 
@@ -68,7 +68,7 @@ EOT;
 
     /**
      * @param $xml
-     * @return string
+     * @return string|bool|array
      */
     abstract protected function processResponse($xml);
 

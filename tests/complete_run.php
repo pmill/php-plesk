@@ -94,7 +94,7 @@ echo "Running test suite on " . $info['server_name'] . PHP_EOL;
 $request = new \pmill\Plesk\ListIPAddresses($config);
 $ips = $request->process();
 
-foreach ($ips AS $ip) {
+foreach ($ips as $ip) {
     if ($ip['is_default']) {
         $data['shared_ip_address'] = $ip['ip_address'];
     }
@@ -113,7 +113,7 @@ echo "Shared IP Address found: " . $data['shared_ip_address'] . PHP_EOL;
 $request = new \pmill\Plesk\ListServicePlans($config);
 $plans = $request->process();
 
-foreach ($plans AS $plan) {
+foreach ($plans as $plan) {
     if (strtolower($plan['name']) == 'unlimited') {
         $data['unlimited_plan_id'] = $plan['id'];
         echo "Unlimited Service Plan found: " . $data['unlimited_plan_id'] . PHP_EOL;
@@ -193,7 +193,7 @@ try {
     $subscriptions = $request->process();
 
     $subscription_found = false;
-    foreach ($subscriptions AS $subscription) {
+    foreach ($subscriptions as $subscription) {
         if ($subscription['id'] == $data['subscription_id']) {
             $subscription_found = true;
         }
@@ -230,7 +230,7 @@ try {
         $sites = $request->process();
 
         $site_found = false;
-        foreach ($sites AS $site) {
+        foreach ($sites as $site) {
             if ($site['id'] == $data['site_id']) {
                 $site_found = true;
             }
@@ -279,7 +279,7 @@ try {
         $email_addresses = $request->process();
 
         $email_address_found = false;
-        foreach ($email_addresses AS $email_address) {
+        foreach ($email_addresses as $email_address) {
             if ($email_address['id'] == $data['email_address_id']) {
                 $email_address_found = true;
             }
@@ -342,7 +342,7 @@ try {
         $aliases = $request->process();
 
         $alias_found = false;
-        foreach ($aliases AS $alias_id => $alias_name) {
+        foreach ($aliases as $alias_id => $alias_name) {
             if ($alias_id == $data['site_alias_id']) {
                 $alias_found = true;
             }
@@ -393,7 +393,7 @@ try {
         $subdomains = $request->process();
 
         $subdomain_found = false;
-        foreach ($subdomains AS $subdomain) {
+        foreach ($subdomains as $subdomain) {
             if ($subdomain['id'] == $data['subdomain_id']) {
                 $subdomain_found = true;
             }
@@ -451,7 +451,7 @@ try {
         $servers = $request->process();
 
         $server_found = false;
-        foreach ($servers AS $server) {
+        foreach ($servers as $server) {
             if ($server['type'] == 'mysql') {
                 $data['db_server_id'] = $server['id'];
                 $server_found = true;
@@ -491,7 +491,7 @@ try {
         $databases = $request->process();
 
         $database_found = false;
-        foreach ($databases AS $database) {
+        foreach ($databases as $database) {
             if ($database['id'] == $data['db_id']) {
                 $database_found = true;
             }

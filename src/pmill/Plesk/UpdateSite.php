@@ -24,32 +24,37 @@ class UpdateSite extends BaseRequest
 EOT;
 
     /**
-     * @var array
+     * @var int
      */
-    protected $default_params = array(
-        'id' => null,
-        'nodes' => '',
-        'properties' => '',
-    );
+    public $id;
 
     /**
      * @var array
      */
-    protected $node_mapping = array(
+    protected $default_params = [
+        'id' => null,
+        'nodes' => '',
+        'properties' => '',
+    ];
+
+    /**
+     * @var array
+     */
+    protected $node_mapping = [
         'status' => 'status',
         'domain' => 'name',
-    );
+    ];
 
     /**
      * UpdateSite constructor.
      * @param array $config
      * @param array $params
      */
-    public function __construct(array $config, $params = array())
+    public function __construct(array $config, $params = [])
     {
-        $properties = array();
+        $properties = [];
 
-        foreach (array('php', 'php_handler_type', 'webstat', 'www_root') AS $key) {
+        foreach (['php', 'php_handler_type', 'webstat', 'www_root'] as $key) {
             if (isset($params[$key])) {
                 $properties[$key] = $params[$key];
             }

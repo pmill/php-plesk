@@ -5,6 +5,9 @@ use pmill\Plesk\Helper\Xml;
 
 class ListSubscriptions extends BaseRequest
 {
+    /**
+     * @var string
+     */
     public $xml_packet = <<<EOT
 <?xml version="1.0"?>
 <packet version="1.6.3.0">
@@ -20,11 +23,19 @@ class ListSubscriptions extends BaseRequest
 </packet>
 EOT;
 
+    /**
+     * @var array
+     */
     protected $default_params = [
         'filter' => null,
     ];
 
-    public function __construct($config, $params = array())
+    /**
+     * @param array $config
+     * @param array $params
+     * @throws ApiRequestException
+     */
+    public function __construct($config, $params = [])
     {
         $this->default_params['filter'] = new Node('filter');
 
@@ -37,7 +48,7 @@ EOT;
     }
 
     /**
-     * Process the response from Plesk
+     * @param $xml
      * @return array
      */
     protected function processResponse($xml)

@@ -3,6 +3,9 @@ namespace pmill\Plesk;
 
 class ListSecretKeys extends BaseRequest
 {
+    /**
+     * @var string
+     */
     public $xml_packet = <<<EOT
 <?xml version="1.0"?>
 <packet>
@@ -43,7 +46,7 @@ EOT;
     }
 
     /**
-     * Process the response from Plesk
+     * @param $xml
      * @return array
      */
     protected function processResponse($xml)

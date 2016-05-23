@@ -22,9 +22,9 @@ EOT;
     /**
      * @var array
      */
-    protected $default_params = array(
+    protected $default_params = [
         'id' => null,
-    );
+    ];
 
     /**
      * @param $xml

@@ -3,6 +3,9 @@ namespace pmill\Plesk;
 
 class ListClients extends BaseRequest
 {
+    /**
+     * @var string
+     */
     public $xml_packet = <<<EOT
 <?xml version="1.0"?>
 <packet version="1.6.0.0">
@@ -19,17 +22,17 @@ class ListClients extends BaseRequest
 EOT;
 
     /**
-     * Process the response from Plesk
+     * @param $xml
      * @return array
      */
     protected function processResponse($xml)
     {
-        $result = array();
+        $result = [];
 
         for ($i = 0; $i < count($xml->client->get->result); $i++) {
             $client = $xml->client->get->result[$i];
 
-            $result[] = array(
+            $result[] = [
                 'id' => (string)$client->id,
                 'status' => (string)$client->status,
                 'created' => (string)$client->data->gen_info->cr_date,
@@ -44,7 +47,7 @@ EOT;
                 'post_code' => (string)$client->data->gen_info->pcode,
                 'country' => (string)$client->data->gen_info->country,
                 'locale' => (string)$client->data->gen_info->locale,
-                'stat' => array(
+                'stat' => [
                     'domains' => (int)$client->data->stat->active_domains,
                     'subdomains' => (int)$client->data->stat->subdomains,
                     'disk_space' => (int)$client->data->stat->disk_space,
@@ -52,8 +55,8 @@ EOT;
                     'databases' => (int)$client->data->stat->data_bases,
                     'traffic' => (int)$client->data->stat->traffic,
                     'traffic_prevday' => (int)$client->data->stat->traffic_prevday,
-                ),
-            );
+                ],
+            ];
         }
 
         return $result;

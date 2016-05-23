@@ -23,10 +23,10 @@ EOT;
     /**
      * @var array
      */
-    protected $default_params = array(
+    protected $default_params = [
         'filter' => null,
         'properties' => null,
-    );
+    ];
 
     /**
      * @param array $config
@@ -43,9 +43,9 @@ EOT;
             $params['filter'] = new Node('id', $params['id']);
         }
 
-        $properties = array();
+        $properties = [];
 
-        foreach (array('www_root') as $key) {
+        foreach (['www_root'] as $key) {
             if (isset($params[$key])) {
                 $properties[$key] = $params[$key];
             }
@@ -57,8 +57,9 @@ EOT;
     }
 
     /**
-     * Process the response from Plesk
+     * @param $xml
      * @return bool
+     * @throws ApiRequestException
      */
     protected function processResponse($xml)
     {
