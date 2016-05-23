@@ -3,6 +3,9 @@ namespace pmill\Plesk;
 
 class CreateSubdomain extends BaseRequest
 {
+    /**
+     * @var string
+     */
     public $xml_packet = <<<EOT
 <?xml version="1.0" encoding="UTF-8"?>
 <packet version="1.6.3.5">
@@ -35,7 +38,15 @@ class CreateSubdomain extends BaseRequest
 </packet>
 EOT;
 
-    protected $default_params = array(
+    /**
+     * @var int
+     */
+    public $id;
+
+    /**
+     * @var array
+     */
+    protected $default_params = [
         'domain' => null,
         'subdomain' => null,
         'www_root' => null,
@@ -43,8 +54,13 @@ EOT;
         'ftp_password' => '',
         'ssl' => true,
         'php' => true,
-    );
+    ];
 
+    /**
+     * @param array $config
+     * @param array $params
+     * @throws ApiRequestException
+     */
     public function __construct($config, $params)
     {
         parent::__construct($config, $params);
@@ -55,8 +71,9 @@ EOT;
     }
 
     /**
-     * Process the response from Plesk
+     * @param $xml
      * @return bool
+     * @throws ApiRequestException
      */
     protected function processResponse($xml)
     {

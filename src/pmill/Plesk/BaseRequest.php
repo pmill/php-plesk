@@ -68,7 +68,7 @@ EOT;
 
     /**
      * @param $xml
-     * @return string
+     * @return string|bool|array
      */
     abstract protected function processResponse($xml);
 

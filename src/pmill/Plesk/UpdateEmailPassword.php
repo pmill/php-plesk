@@ -3,6 +3,9 @@ namespace pmill\Plesk;
 
 class UpdateEmailPassword extends BaseRequest
 {
+    /**
+     * @var string
+     */
     public $xml_packet = <<<EOT
 <?xml version="1.0"?>
 <packet version="1.6.0.2">
@@ -22,12 +25,25 @@ class UpdateEmailPassword extends BaseRequest
 </packet>
 EOT;
 
-    protected $default_params = array(
+    /**
+     * @var int
+     */
+    public $id;
+
+    /**
+     * @var array
+     */
+    protected $default_params = [
         'domain_id' => null,
         'username' => null,
         'password' => null,
-    );
+    ];
 
+    /**
+     * @param array $config
+     * @param array $params
+     * @throws ApiRequestException
+     */
     public function __construct($config, $params)
     {
         if (isset($params['email'])) {
@@ -37,7 +53,7 @@ EOT;
 
             list($username, $domain) = explode("@", $params['email']);
 
-            $request = new GetSite($config, array('domain' => $domain));
+            $request = new GetSite($config, ['domain' => $domain]);
             $info = $request->process();
 
             $params['domain_id'] = $info['id'];
@@ -48,8 +64,9 @@ EOT;
     }
 
     /**
-     * Process the response from Plesk
+     * @param $xml
      * @return bool
+     * @throws ApiRequestException
      */
     protected function processResponse($xml)
     {

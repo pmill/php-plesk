@@ -3,6 +3,9 @@ namespace pmill\Plesk;
 
 class GetSite extends BaseRequest
 {
+    /**
+     * @var string
+     */
     public $xml_packet = <<<EOT
 <?xml version="1.0"?>
 <packet version="1.6.0.0">
@@ -19,13 +22,17 @@ class GetSite extends BaseRequest
 </packet>
 EOT;
 
-    protected $default_params = array(
+    /**
+     * @var array
+     */
+    protected $default_params = [
         'domain' => null,
-    );
+    ];
 
     /**
-     * Process the response from Plesk
+     * @param $xml
      * @return array
+     * @throws ApiRequestException
      */
     protected function processResponse($xml)
     {
@@ -40,7 +47,7 @@ EOT;
 
         $hosting_type = (string)$site->data->gen_info->htype;
 
-        return array(
+        return [
             'id' => (string)$site->id,
             'status' => (string)$site->status,
             'created' => (string)$site->data->gen_info->cr_date,
@@ -51,16 +58,17 @@ EOT;
             'www_root' => $this->findHostingProperty($site->data->hosting->{$hosting_type}, 'www_root'),
             'ftp_username' => $this->findHostingProperty($site->data->hosting->{$hosting_type}, 'ftp_login'),
             'ftp_password' => $this->findHostingProperty($site->data->hosting->{$hosting_type}, 'ftp_password'),
-        );
+        ];
     }
 
-    /*
-	 * Helper function to search an XML tree for a specific property
-	 * @return string
-	 */
+    /**
+     * @param $node
+     * @param $key
+     * @return null|string
+     */
     protected function findHostingProperty($node, $key)
     {
-        foreach ($node->children() AS $property) {
+        foreach ($node->children() as $property) {
             if ($property->name == $key) {
                 return (string)$property->value;
             }

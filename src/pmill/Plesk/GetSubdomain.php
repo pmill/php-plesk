@@ -3,6 +3,9 @@ namespace pmill\Plesk;
 
 class GetSubdomain extends BaseRequest
 {
+    /**
+     * @var string
+     */
     public $xml_packet = <<<EOT
 <?xml version="1.0"?>
 <packet version="1.6.0.0">
@@ -16,13 +19,17 @@ class GetSubdomain extends BaseRequest
 </packet>
 EOT;
 
-    protected $default_params = array(
+    /**
+     * @var array
+     */
+    protected $default_params = [
         'name' => null,
-    );
+    ];
 
     /**
-     * Process the response from Plesk
+     * @param $xml
      * @return array
+     * @throws ApiRequestException
      */
     protected function processResponse($xml)
     {
@@ -36,7 +43,7 @@ EOT;
             throw new ApiRequestException($subdomain->result);
         }
 
-        return array(
+        return [
             'id' => (int)$subdomain->id,
             'status' => (string)$subdomain->status,
             'parent' => (string)$subdomain->data->parent,
@@ -44,16 +51,17 @@ EOT;
             'php' => (string)$this->findHostingProperty($subdomain->data, 'php'),
             'php_handler_type' => (string)$this->findHostingProperty($subdomain->data, 'php_handler_type'),
             'www_root' => (string)$this->findHostingProperty($subdomain->data, 'www_root'),
-        );
+        ];
     }
 
-    /*
-     * Helper function to search an XML tree for a specific property
-     * @return string
+    /**
+     * @param $node
+     * @param $key
+     * @return null|string
      */
     protected function findHostingProperty($node, $key)
     {
-        foreach ($node->children() AS $property) {
+        foreach ($node->children() as $property) {
             if ($property->name == $key) {
                 return (string)$property->value;
             }

@@ -3,6 +3,9 @@ namespace pmill\Plesk;
 
 class DeleteSiteAlias extends BaseRequest
 {
+    /**
+     * @var string
+     */
     public $xml_packet = <<<EOT
 <?xml version="1.0"?>
 <packet version="1.6.3.5">
@@ -16,11 +19,19 @@ class DeleteSiteAlias extends BaseRequest
 </packet>
 EOT;
 
-    protected $default_params = array(
+    /**
+     * @var array
+     */
+    protected $default_params = [
         'filter' => null,
-    );
+    ];
 
-    public function __construct($config, $params = array())
+    /**
+     * @param array $config
+     * @param array $params
+     * @throws ApiRequestException
+     */
+    public function __construct($config, $params = [])
     {
         if (isset($params['domain'])) {
             $params['filter'] = new Node('name', $params['domain']);
@@ -38,8 +49,9 @@ EOT;
     }
 
     /**
-     * Process the response from Plesk
+     * @param $xml
      * @return bool
+     * @throws ApiRequestException
      */
     protected function processResponse($xml)
     {

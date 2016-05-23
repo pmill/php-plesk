@@ -44,7 +44,7 @@ EOT;
     }
 
     /**
-     * Process the response from Plesk
+     * @param $xml
      * @return bool
      */
     protected function processResponse($xml)

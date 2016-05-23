@@ -3,6 +3,9 @@ namespace pmill\Plesk;
 
 class CreateSite extends BaseRequest
 {
+    /**
+     * @var string
+     */
     public $xml_packet = <<<EOT
 <?xml version="1.0"?>
 <packet version="1.6.3.5">
@@ -37,16 +40,29 @@ class CreateSite extends BaseRequest
 </packet>
 EOT;
 
-    protected $default_params = array(
+    /**
+     * @var int
+     */
+    public $id;
+
+    /**
+     * @var array
+     */
+    protected $default_params = [
         'domain' => null,
         'subscription_id' => null,
         'php' => true,
         'php_handler_id' => 'fastcgi',
         'webstat' => 'none',
         'www_root' => null,
-    );
+    ];
 
-    public function __construct($config, $params = array())
+    /**
+     * @param array $config
+     * @param array $params
+     * @throws ApiRequestException
+     */
+    public function __construct($config, $params = [])
     {
         if (!isset($params['www_root'])) {
             $params['www_root'] = $params['domain'];
@@ -56,8 +72,9 @@ EOT;
     }
 
     /**
-     * Process the response from Plesk
+     * @param $xml
      * @return bool
+     * @throws ApiRequestException
      */
     protected function processResponse($xml)
     {

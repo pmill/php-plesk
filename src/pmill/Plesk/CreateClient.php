@@ -24,7 +24,10 @@ EOT;
      */
     public $id;
 
-    protected $default_params = array(
+    /**
+     * @var array
+     */
+    protected $default_params = [
         'company_name' => '',
         'contact_name' => null,
         'username' => null,
@@ -38,12 +41,12 @@ EOT;
         'state' => '',
         'post_code' => '',
         'country' => '',
-    );
+    ];
 
     /**
      * @var array
      */
-    protected $node_mapping = array(
+    protected $node_mapping = [
         'company_name' => 'cname',
         'contact_name' => 'pname',
         'username' => 'login',
@@ -57,7 +60,7 @@ EOT;
         'state' => 'state',
         'post_code' => 'pcode',
         'country' => 'country',
-    );
+    ];
 
     /**
      * CreateClient constructor.

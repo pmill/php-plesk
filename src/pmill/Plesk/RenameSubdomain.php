@@ -3,6 +3,9 @@ namespace pmill\Plesk;
 
 class RenameSubdomain extends BaseRequest
 {
+    /**
+     * @var string
+     */
     public $xml_packet = <<<EOT
 <?xml version="1.0"?>
 <packet version="1.5.2.0">
@@ -15,15 +18,23 @@ class RenameSubdomain extends BaseRequest
 </packet>
 EOT;
 
-    protected $default_params = array(
+    /**
+     * @var array
+     */
+    protected $default_params = [
         'id' => null,
         'name' => null,
-    );
+    ];
 
+    /**
+     * @param array $config
+     * @param array $params
+     * @throws ApiRequestException
+     */
     public function __construct($config, $params)
     {
         if (isset($params['subdomain'])) {
-            $request = new GetSubdomain($config, array('name' => $params['subdomain']));
+            $request = new GetSubdomain($config, ['name' => $params['subdomain']]);
             $info = $request->process();
 
             $this->params['id'] = $info['id'];
@@ -33,8 +44,9 @@ EOT;
     }
 
     /**
-     * Process the response from Plesk
+     * @param $xml
      * @return bool
+     * @throws ApiRequestException
      */
     protected function processResponse($xml)
     {

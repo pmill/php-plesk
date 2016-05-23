@@ -22,7 +22,7 @@ EOT;
      */
     protected function processResponse($xml)
     {
-        $response = array();
+        $response = [];
 
         foreach ($xml->{'wp-instance'}->{'get-list'}->result as $result) {
             $result = $result->{'wp-instance'};

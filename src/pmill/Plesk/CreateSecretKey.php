@@ -21,9 +21,9 @@ EOT;
     /**
      * @var array
      */
-    protected $default_params = array(
+    protected $default_params = [
         'ip_address' => null,
-    );
+    ];
 
     /**
      * @var string

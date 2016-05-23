@@ -22,9 +22,9 @@ EOT;
     /**
      * @var array
      */
-    protected $default_params = array(
+    protected $default_params = [
         'filter' => null,
-    );
+    ];
 
     /**
      * ListSubdomains constructor.
@@ -54,10 +54,10 @@ EOT;
      */
     protected function processResponse($xml)
     {
-        $result = array();
+        $result = [];
 
         foreach ($xml->subdomain->get->result as $node) {
-            $result[] = array(
+            $result[] = [
                 'id' => (int)$node->id,
                 'status' => (string)$node->status,
                 'parent' => (string)$node->data->parent,
@@ -65,8 +65,9 @@ EOT;
                 'php' => (string)Xml::findProperty($node->data, 'php'),
                 'php_handler_type' => (string)Xml::findProperty($node->data, 'php_handler_type'),
                 'www_root' => (string)Xml::findProperty($node->data, 'www_root'),
-            );
+            ];
         }
+
         return $result;
     }
 }

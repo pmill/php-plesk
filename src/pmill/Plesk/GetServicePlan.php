@@ -5,6 +5,9 @@ use pmill\Plesk\Helper\Xml;
 
 class GetServicePlan extends BaseRequest
 {
+    /**
+     * @var string
+     */
     public $xml_packet = <<<EOT
 <?xml version="1.0"?>
 <packet version="1.6.3.0">
@@ -71,15 +74,15 @@ EOT;
             throw new ApiRequestException($plan->result);
         }
 
-        $hosting = array();
+        $hosting = [];
         foreach ($plan->hosting as $host) {
             $hosting[$host->getName()] = Xml::getProperties($host);
         }
 
-        return array(
+        return [
             'id' => (string)$plan->id,
             'status' => (string)$plan->status,
-            'limits' => array(
+            'limits' => [
                 'overuse' => (string)$plan->limits->overuse,
                 'max_sites' => Xml::findProperty($plan->limits, 'max_site', 'limit'),
                 'max_subdomains' => Xml::findProperty($plan->limits, 'max_subdom', 'limit'),
@@ -95,23 +98,23 @@ EOT;
                 'max_webapps' => Xml::findProperty($plan->limits, 'max_webapps', 'limit'),
                 'max_site_builder' => Xml::findProperty($plan->limits, 'max_site_builder', 'limit'),
                 'expiration' => Xml::findProperty($plan->limits, 'expiration', 'limit'),
-            ),
-            'log_rotation' => array(
+            ],
+            'log_rotation' => [
                 'on' => (string)$plan->{"log-rotation"}->on->{"log-condition"}->{"log-bytime"},
                 'max_num_files' => (int)$plan->{"log-rotation"}->on->{"log-max-num-files"},
                 'compressed' => (string)$plan->{"log-rotation"}->on->{"log-compress"},
-            ),
-            'preferences' => array(
+            ],
+            'preferences' => [
                 'stat' => (int)$plan->preferences->stat,
                 'maillists' => (string)$plan->preferences->maillists,
                 'dns_zone_type' => (string)$plan->preferences->dns_zone_type,
-            ),
+            ],
             'hosting' => $hosting,
-            'performance' => array(
+            'performance' => [
                 'bandwidth' => (int)$plan->performance->bandwidth,
                 'max_connections' => (int)$plan->performance->max_connections,
-            ),
+            ],
             'permissions' => Xml::getProperties($plan->permissions, 'permission'),
-        );
+        ];
     }
 }

@@ -49,7 +49,7 @@ class Xml
      */
     public static function getProperties($node, $node_name = 'property')
     {
-        $result = array();
+        $result = [];
 
         foreach ($node->children() as $property) {
             if ($property->getName() == $node_name) {

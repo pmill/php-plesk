@@ -3,6 +3,9 @@ namespace pmill\Plesk;
 
 class CreateSiteAlias extends BaseRequest
 {
+    /**
+     * @var string
+     */
     public $xml_packet = <<<EOT
 <?xml version="1.0"?>
 <packet version="1.6.3.5">
@@ -21,14 +24,27 @@ class CreateSiteAlias extends BaseRequest
 </packet>
 EOT;
 
-    protected $default_params = array(
+    /**
+     * @var int
+     */
+    public $id;
+
+    /**
+     * @var array
+     */
+    protected $default_params = [
         'site_id' => null,
         'alias' => null,
         'web_enabled' => 1,
         'mail_enabled' => 0,
         'tomcat_enabled' => 0,
-    );
+    ];
 
+    /**
+     * @param array $config
+     * @param array $params
+     * @throws ApiRequestException
+     */
     public function __construct($config, $params)
     {
         if (!isset($params['site_id'])) {
@@ -45,8 +61,9 @@ EOT;
     }
 
     /**
-     * Process the response from Plesk
+     * @param $xml
      * @return bool
+     * @throws ApiRequestException
      */
     protected function processResponse($xml)
     {
