@@ -75,6 +75,7 @@ EOT;
             $result[] = [
                 'id' => (string)$webspace->id,
                 'status' => (string)$webspace->status,
+                'subscription_status' => (int)$webspace->data->gen_info->status,
                 'created' => (string)$webspace->data->gen_info->cr_date,
                 'name' => (string)$webspace->data->gen_info->name,
                 'owner_id' => (string)$webspace->data->gen_info->{"owner-id"},
