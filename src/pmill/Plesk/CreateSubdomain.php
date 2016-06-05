@@ -3,6 +3,9 @@ namespace pmill\Plesk;
 
 class CreateSubdomain extends BaseRequest
 {
+    /**
+     * @var string
+     */
     public $xml_packet = <<<EOT
 <?xml version="1.0" encoding="UTF-8"?>
 <packet version="1.6.3.5">
@@ -23,10 +26,6 @@ class CreateSubdomain extends BaseRequest
 				<value>{FTP_PASSWORD}</value>
             </property>
             <property>
-				<name>php_handler_type</name>
-				<value>{PHP_HANDLER_TYPE}</value>
-            </property>
-            <property>
 				<name>ssl</name>
 				<value>{SSL}</value>
             </property>
@@ -39,37 +38,52 @@ class CreateSubdomain extends BaseRequest
 </packet>
 EOT;
 
-	protected $default_params = array(
-		'domain'=>NULL,
-		'subdomain'=>NULL,
-		'www_root'=>NULL,
-		'ftp_username'=>'',
-		'ftp_password'=>'',
-		'php_handler_type'=>'module',
-		'ssl'=>TRUE,
-		'php'=>TRUE,
-	);
+    /**
+     * @var int
+     */
+    public $id;
 
+    /**
+     * @var array
+     */
+    protected $default_params = [
+        'domain' => null,
+        'subdomain' => null,
+        'www_root' => null,
+        'ftp_username' => '',
+        'ftp_password' => '',
+        'ssl' => true,
+        'php' => true,
+    ];
+
+    /**
+     * @param array $config
+     * @param array $params
+     * @throws ApiRequestException
+     */
     public function __construct($config, $params)
     {
-    	parent::__construct($config, $params);
+        parent::__construct($config, $params);
 
-    	if (substr($this->params['www_root'], 0, 1) !== '/')
-    		$this->params['www_root'] = '/'.$this->params['www_root'];
+        if (substr($this->params['www_root'], 0, 1) !== '/') {
+            $this->params['www_root'] = '/' . $this->params['www_root'];
+        }
     }
 
     /**
-     * Process the response from Plesk
+     * @param $xml
      * @return bool
+     * @throws ApiRequestException
      */
     protected function processResponse($xml)
     {
         $result = $xml->subdomain->add->result;
 
-        if ($result->status == 'error')
-            throw new ApiRequestException((string)$result->errtext);
+        if ($result->status == 'error') {
+            throw new ApiRequestException($result);
+        }
 
         $this->id = (int)$result->id;
-        return TRUE;
+        return true;
     }
 }

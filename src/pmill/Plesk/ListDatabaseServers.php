@@ -3,6 +3,9 @@ namespace pmill\Plesk;
 
 class ListDatabaseServers extends BaseRequest
 {
+    /**
+     * @var string
+     */
     public $xml_packet = <<<EOT
 <?xml version="1.0"?>
 <packet>
@@ -15,20 +18,21 @@ class ListDatabaseServers extends BaseRequest
 EOT;
 
     /**
-     * Process the response from Plesk
+     * @param $xml
      * @return array
      */
     protected function processResponse($xml)
     {
-        $result = array();
-        foreach($xml->db_server->{'get-local'}->children() AS $node)
-        {
-        	$result[] = array(
-        		'status'=>(string)$node->status,
-        		'id'=>(int)$node->id,
-        		'type'=>(string)$node->type,
-        	);
+        $result = [];
+
+        foreach ($xml->db_server->{'get-local'}->children() as $node) {
+            $result[] = [
+                'status' => (string)$node->status,
+                'id' => (int)$node->id,
+                'type' => (string)$node->type,
+            ];
         }
+
         return $result;
     }
 }

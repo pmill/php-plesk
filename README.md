@@ -1,8 +1,6 @@
 php-plesk
 ============
 
-**PLEASE NOTE, I NO LONGER HAVE ACCESS TO A PLESK SERVER SO I HAVE STOPPED DEVELOPMENT ON THIS PACKAGE. I AM HAPPY TO ACCEPT PULL REQUESTS FOR BUG FIXES AND ADDITIONAL FEATURES.**
-
 Introduction
 ------------
 
@@ -22,12 +20,13 @@ The following features are currently supported:
 *   List database servers
 *   List/add/delete databases
 *   Add database users
+*   Further functionality can be seen in the examples folder
 *   Email dev.pmill@gmail.com with requests for exposing further functionality
 
 Requirements
 ------------
 
-This library package requires PHP 5.3 or later and Plesk 9.5 or above.
+This library package requires PHP 5.4 or later and Plesk 12.0 or above.
 
 
 Usage
@@ -77,6 +76,30 @@ Unversioned (13 Apr 2013)
 
 *   Added functionality for databases 
 *   Updated test script
+
+0.5.0 (08/03/2016)
+
+*   Added secret key functionality
+*   Updated error handling to expose Plesk error code
+*   Added html entity escaping
+
+0.5.1 (05/04/2016)
+
+*   Added mail preferences functionality
+*   Added wordpress functionality
+*   Added APS functionality
+*   Added ssl certificate functionality
+
+0.5.2 (18/05/2016)
+
+*   Updated ListSubscriptions to retrieve plan guids
+*   Updated GetServicePlan to accept 'guid' as a filter option
+*   Updated DeleteSiteAlias to accept 'alias' as a filter option
+
+0.5.3 (24/05/2016)
+
+*   Code quality improvements
+*   Updated ListSubscriptions to retrieve subscription status
 
 Copyright and License
 ---------------------

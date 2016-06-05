@@ -3,6 +3,9 @@ namespace pmill\Plesk;
 
 class DeleteDatabase extends BaseRequest
 {
+    /**
+     * @var string
+     */
     public $xml_packet = <<<EOT
 <?xml version="1.0"?>
 <packet>
@@ -16,21 +19,26 @@ class DeleteDatabase extends BaseRequest
 </packet>
 EOT;
 
-	protected $default_params = array(
-		'id'=>NULL,
-	);
+    /**
+     * @var array
+     */
+    protected $default_params = [
+        'id' => null,
+    ];
 
     /**
-     * Process the response from Plesk
+     * @param $xml
      * @return bool
+     * @throws ApiRequestException
      */
     protected function processResponse($xml)
     {
         $result = $xml->database->{'del-db'}->result;
 
-        if ($result->status == 'error')
-            throw new ApiRequestException((string)$result->errtext);
+        if ($result->status == 'error') {
+            throw new ApiRequestException($result);
+        }
 
-        return TRUE;
+        return true;
     }
 }

@@ -3,6 +3,9 @@ namespace pmill\Plesk;
 
 class DeleteSiteAlias extends BaseRequest
 {
+    /**
+     * @var string
+     */
     public $xml_packet = <<<EOT
 <?xml version="1.0"?>
 <packet version="1.6.3.5">
@@ -15,35 +18,49 @@ class DeleteSiteAlias extends BaseRequest
     </site-alias>
 </packet>
 EOT;
-    
-    protected $default_params = array(
-		'filter'=>NULL,
-	);
 
-	public function __construct($config, $params=array())
-	{
-		if (isset($params['domain'])) {
-			$params['filter'] = '<name>'.$params['domain'].'</name>';
-		}
-        
+    /**
+     * @var array
+     */
+    protected $default_params = [
+        'filter' => null,
+    ];
+
+    /**
+     * @param array $config
+     * @param array $params
+     * @throws ApiRequestException
+     */
+    public function __construct($config, $params = [])
+    {
+        if (isset($params['domain'])) {
+            $params['filter'] = new Node('name', $params['domain']);
+        }
+
+        if (isset($params['alias'])) {
+            $params['filter'] = new Node('name', $params['alias']);
+        }
+
         if (isset($params['id'])) {
-			$params['filter'] = '<id>'.$params['id'].'</id>';
-		}
+            $params['filter'] = new Node('id', $params['id']);
+        }
 
-		parent::__construct($config, $params);
+        parent::__construct($config, $params);
     }
 
     /**
-     * Process the response from Plesk
+     * @param $xml
      * @return bool
+     * @throws ApiRequestException
      */
     protected function processResponse($xml)
     {
         $result = $xml->{'site-alias'}->delete->result;
 
-        if ($result->status == 'error')
-            throw new ApiRequestException((string)$result->errtext);
+        if ($result->status == 'error') {
+            throw new ApiRequestException($result);
+        }
 
-        return TRUE;
+        return true;
     }
 }

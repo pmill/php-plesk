@@ -3,6 +3,9 @@ namespace pmill\Plesk;
 
 class ListSiteAliases extends BaseRequest
 {
+    /**
+     * @var string
+     */
     public $xml_packet = <<<EOT
 <?xml version="1.0"?>
 <packet version="1.6.3.0">
@@ -14,33 +17,47 @@ class ListSiteAliases extends BaseRequest
 </packet>
 EOT;
 
-	protected $default_params = array(
-		'filter'=>'<filter/>',
-	);
+    /**
+     * @var array
+     */
+    protected $default_params = [
+        'filter' => null,
+    ];
 
-	public function __construct($config, $params=array())
-	{
-		if (isset($params['domain'])) {
-			$params['filter'] = '<filter><site-name>'.$params['domain'].'</site-name></filter>';
-		}
-        
+    /**
+     * @param array $config
+     * @param array $params
+     * @throws ApiRequestException
+     */
+    public function __construct($config, $params = [])
+    {
+        $params['filter'] = new Node('filter');
+
+        if (isset($params['domain'])) {
+            $childNode = new Node('site-name', $params['domain']);
+            $params['filter'] = new Node('filter', $childNode);
+        }
+
         if (isset($params['site_id'])) {
-			$params['filter'] = '<filter><site-id>'.$params['site_id'].'</site-id></filter>';
-		}
+            $childNode = new Node('site-id', $params['site_id']);
+            $params['filter'] = new Node('filter', $childNode);
+        }
 
-		parent::__construct($config, $params);
+        parent::__construct($config, $params);
     }
 
     /**
-     * Process the response from Plesk
+     * @param $xml
      * @return array
      */
     protected function processResponse($xml)
     {
-        $result = array();
-        foreach ($xml->{"site-alias"}->get->result AS $alias) {
+        $result = [];
+
+        foreach ($xml->{"site-alias"}->get->result as $alias) {
             $result[(int)$alias->id] = (string)$alias->info->name;
         }
+
         return $result;
     }
 }

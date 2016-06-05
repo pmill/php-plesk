@@ -3,6 +3,9 @@ namespace pmill\Plesk;
 
 class CreateSubscription extends BaseRequest
 {
+    /**
+     * @var string
+     */
     public $xml_packet = <<<EOT
 <?xml version="1.0" encoding="UTF-8"?>
 <packet version="1.6.3.0">
@@ -34,27 +37,36 @@ class CreateSubscription extends BaseRequest
 </packet>
 EOT;
 
-	protected $default_params = array(
-		'domain_name'=>NULL,
-		'ip_address'=>NULL,
-		'username'=>NULL,
-		'password'=>NULL,
-		'owner_id'=>NULL,
-		'service_plan_id'=>NULL,
-		'status'=>0,
-	);
+    /**
+     * @var int
+     */
+    public $id;
 
     /**
-     * Process the response from Plesk
+     * @var array
+     */
+    protected $default_params = [
+        'domain_name' => null,
+        'ip_address' => null,
+        'username' => null,
+        'password' => null,
+        'owner_id' => null,
+        'service_plan_id' => null,
+        'status' => 0,
+    ];
+
+    /**
+     * @param $xml
      * @return bool
+     * @throws ApiRequestException
      */
     protected function processResponse($xml)
     {
         if ($xml->webspace->add->result->status == 'error') {
-            throw new ApiRequestException((string)$xml->webspace->add->result->errtext);
+            throw new ApiRequestException($xml->webspace->add->result);
         }
 
-		$this->id = (int)$xml->webspace->add->result->id;
-        return TRUE;
+        $this->id = (int)$xml->webspace->add->result->id;
+        return true;
     }
 }

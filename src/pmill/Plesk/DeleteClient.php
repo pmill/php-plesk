@@ -3,6 +3,9 @@ namespace pmill\Plesk;
 
 class DeleteClient extends BaseRequest
 {
+    /**
+     * @var string
+     */
     public $xml_packet = <<<EOT
 <?xml version="1.0"?>
 <packet version="1.6.3.0">
@@ -16,35 +19,44 @@ class DeleteClient extends BaseRequest
 </packet>
 EOT;
 
-	protected $default_params = array(
-		'filter'=>NULL,
-	);
+    /**
+     * @var array
+     */
+    protected $default_params = [
+        'filter' => null,
+    ];
 
-	public function __construct($config, $params=array())
-	{
-		if(isset($params['username'])) {
-			$params['filter'] = '<login>'.$params['username'].'</login>';
-		}
+    /**
+     * @param array $config
+     * @param array $params
+     * @throws ApiRequestException
+     */
+    public function __construct($config, $params = [])
+    {
+        if (isset($params['username'])) {
+            $params['filter'] = new Node('login', $params['username']);
+        }
 
-		if(isset($params['id'])) {
-			$params['filter'] = '<id>'.$params['id'].'</id>';
-		}
+        if (isset($params['id'])) {
+            $params['filter'] = new Node('id', $params['id']);
+        }
 
-		parent::__construct($config, $params);
+        parent::__construct($config, $params);
     }
 
     /**
-     * Process the response from Plesk
+     * @param $xml
      * @return bool
+     * @throws ApiRequestException
      */
     protected function processResponse($xml)
     {
-    	$result = $xml->customer->del->result;
+        $result = $xml->customer->del->result;
 
         if ($result->status == 'error') {
-            throw new ApiRequestException((string)$result->errtext);
+            throw new ApiRequestException($result);
         }
 
-        return TRUE;
+        return true;
     }
 }

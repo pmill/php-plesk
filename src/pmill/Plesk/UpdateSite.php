@@ -3,6 +3,9 @@ namespace pmill\Plesk;
 
 class UpdateSite extends BaseRequest
 {
+    /**
+     * @var string
+     */
     public $xml_packet = <<<EOT
 <?xml version="1.0"?>
 <packet version="1.6.3.5">
@@ -20,51 +23,67 @@ class UpdateSite extends BaseRequest
 </packet>
 EOT;
 
-    protected $default_params = array(
-        'id'=>NULL,
-        'nodes'=>'',
-        'properties'=>'',
-    );
+    /**
+     * @var int
+     */
+    public $id;
 
-	protected $node_mapping = array(
-		'status'=>'status',
-		'domain'=>'name',
-    );
+    /**
+     * @var array
+     */
+    protected $default_params = [
+        'id' => null,
+        'nodes' => '',
+        'properties' => '',
+    ];
 
-    public function __construct($config, $params=array())
+    /**
+     * @var array
+     */
+    protected $node_mapping = [
+        'status' => 'status',
+        'domain' => 'name',
+    ];
+
+    /**
+     * UpdateSite constructor.
+     * @param array $config
+     * @param array $params
+     */
+    public function __construct(array $config, $params = [])
     {
-        $properties = array();
+        $properties = [];
 
-		foreach (array('php', 'php_handler_type', 'webstat', 'www_root') AS $key) {
-			if (isset($params[$key])) {
-				$properties[$key] = $params[$key];
-			}
-		}
+        foreach (['php', 'php_handler_type', 'webstat', 'www_root'] as $key) {
+            if (isset($params[$key])) {
+                $properties[$key] = $params[$key];
+            }
+        }
 
-		if (count($properties) > 0) {
-			$params['properties'] = '<hosting><vrt_hst>'.$this->generatePropertyList($properties).'</hosting></vrt_hst>';
-		}
+        if (count($properties) > 0) {
+            $childNode = new Node('vrt_hst', $this->generatePropertyList($properties));
+            $params['properties'] = new Node('hosting', $childNode);
+        }
 
-		$nodes_value = trim($this->generateNodeList($params));
-
-		if (strlen($nodes_value) > 0) {
-			$params['nodes'] = '<gen_setup>'.$nodes_value.'</gen_setup>';
-		}
+        if (count($params) > 0) {
+            $params['nodes'] = new Node('gen_setup', $this->generateNodeList($params));
+        }
 
         parent::__construct($config, $params);
     }
 
     /**
-     * Process the response from Plesk
+     * @param $xml
      * @return bool
+     * @throws ApiRequestException
      */
     protected function processResponse($xml)
     {
         if ($xml->site->set->result->status == 'error') {
-            throw new ApiRequestException((string)$xml->site->set->result->errtext);
+            throw new ApiRequestException($xml->site->set->result);
         }
 
         $this->id = (int)$xml->site->set->result->id;
-        return TRUE;
+        return true;
     }
 }

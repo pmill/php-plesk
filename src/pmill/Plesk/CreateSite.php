@@ -3,6 +3,9 @@ namespace pmill\Plesk;
 
 class CreateSite extends BaseRequest
 {
+    /**
+     * @var string
+     */
     public $xml_packet = <<<EOT
 <?xml version="1.0"?>
 <packet version="1.6.3.5">
@@ -19,8 +22,8 @@ class CreateSite extends BaseRequest
 					<value>{PHP}</value>
 				</property>
 				<property>
-					<name>php_handler_type</name>
-					<value>{PHP_HANDLER_TYPE}</value>
+					<name>php_handler_id</name>
+					<value>{PHP_HANDLER_ID}</value>
 				</property>
 				<property>
 					<name>webstat</name>
@@ -37,35 +40,49 @@ class CreateSite extends BaseRequest
 </packet>
 EOT;
 
-	protected $default_params = array(
-		'domain'=>NULL,
-		'subscription_id'=>NULL,
-		'php'=>TRUE,
-		'php_handler_type'=>'module',
-		'webstat'=>'none',
-		'www_root'=>NULL,
-	);
-
-	public function __construct($config, $params=array())
-	{
-		if(!isset($params['www_root'])) {
-			$params['www_root'] = $params['domain'];
-		}
-
-		parent::__construct($config, $params);
-	}
+    /**
+     * @var int
+     */
+    public $id;
 
     /**
-     * Process the response from Plesk
+     * @var array
+     */
+    protected $default_params = [
+        'domain' => null,
+        'subscription_id' => null,
+        'php' => true,
+        'php_handler_id' => 'fastcgi',
+        'webstat' => 'none',
+        'www_root' => null,
+    ];
+
+    /**
+     * @param array $config
+     * @param array $params
+     * @throws ApiRequestException
+     */
+    public function __construct($config, $params = [])
+    {
+        if (!isset($params['www_root'])) {
+            $params['www_root'] = $params['domain'];
+        }
+
+        parent::__construct($config, $params);
+    }
+
+    /**
+     * @param $xml
      * @return bool
+     * @throws ApiRequestException
      */
     protected function processResponse($xml)
     {
         if ($xml->site->add->result->status == 'error') {
-			throw new ApiRequestException((string)$xml->site->add->result->errtext);
-		}
+            throw new ApiRequestException($xml->site->add->result);
+        }
 
-		$this->id = (int)$xml->site->add->result->id;
-        return TRUE;
+        $this->id = (int)$xml->site->add->result->id;
+        return true;
     }
 }

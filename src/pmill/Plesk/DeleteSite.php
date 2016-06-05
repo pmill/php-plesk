@@ -3,6 +3,9 @@ namespace pmill\Plesk;
 
 class DeleteSite extends BaseRequest
 {
+    /**
+     * @var string
+     */
     public $xml_packet = <<<EOT
 <?xml version="1.0"?>
 <packet version="1.6.3.0">
@@ -16,20 +19,24 @@ class DeleteSite extends BaseRequest
 </packet>
 EOT;
 
-	protected $default_params = array(
-		'id'=>NULL,
-	);
+    /**
+     * @var array
+     */
+    protected $default_params = [
+        'id' => null,
+    ];
 
     /**
-     * Process the response from Plesk
+     * @param $xml
      * @return bool
+     * @throws ApiRequestException
      */
     protected function processResponse($xml)
     {
         if ($xml->site->del->result->status == 'error') {
-			throw new ApiRequestException((string)$xml->site->del->result->errtext);
-		}
+            throw new ApiRequestException($xml->site->del->result);
+        }
 
-        return TRUE;
+        return true;
     }
 }

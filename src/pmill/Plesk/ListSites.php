@@ -3,6 +3,9 @@ namespace pmill\Plesk;
 
 class ListSites extends BaseRequest
 {
+    /**
+     * @var string
+     */
     public $xml_packet = <<<EOT
 <?xml version="1.0"?>
 <packet version="1.6.3.0">
@@ -17,58 +20,74 @@ class ListSites extends BaseRequest
 </packet>
 EOT;
 
-	protected $default_params = array(
-		'filter'=>'<filter/>',
-	);
+    /**
+     * @var array
+     */
+    protected $default_params = [
+        'filter' => '<filter/>',
+    ];
 
-	public function __construct($config, $params=array())
-	{
-		if(isset($params['subscription_id'])) {
-			$params['filter'] = '<filter><parent-id>'.$params['subscription_id'].'</parent-id></filter>';
-		}
+    /**
+     * @param array $config
+     * @param array $params
+     * @throws ApiRequestException
+     */
+    public function __construct(array $config, $params = [])
+    {
+        $this->default_params['filter'] = new Node('filter');
 
-		parent::__construct($config, $params);
+        if (isset($params['subscription_id'])) {
+            $ownerIdNode = new Node('parent-id', $params['subscription_id']);
+            $params['filter'] = new Node('filter', $ownerIdNode);
+        }
+
+        parent::__construct($config, $params);
     }
 
     /**
-     * Process the response from Plesk
+     * @param $xml
      * @return array
      */
     protected function processResponse($xml)
     {
-        $result = array();
+        $result = [];
+        $itemCount = count($xml->site->get->result);
 
-        for ($i=0 ;$i<count($xml->site->get->result); $i++) {
+
+        for ($i = 0; $i < $itemCount; $i++) {
             $site = $xml->site->get->result[$i];
             $hosting_type = (string)$site->data->gen_info->htype;
 
-            $result[] = array(
-                'id'=>(string)$site->id,
-                'status'=>(string)$site->status,
-                'created'=>(string)$site->data->gen_info->cr_date,
-                'name'=>(string)$site->data->gen_info->name,
-                'ip'=>(string)$site->data->gen_info->dns_ip_address,
-                'hosting_type'=>$hosting_type,
-                'ip_address'=>(string)$site->data->hosting->{$hosting_type}->ip_address,
-                'www_root'=>$this->findHostingProperty($site->data->hosting->{$hosting_type}, 'www_root'),
-                'ftp_username'=>$this->findHostingProperty($site->data->hosting->{$hosting_type}, 'ftp_login'),
-                'ftp_password'=>$this->findHostingProperty($site->data->hosting->{$hosting_type}, 'ftp_password'),
-            );
+            $result[] = [
+                'id' => (string)$site->id,
+                'status' => (string)$site->status,
+                'created' => (string)$site->data->gen_info->cr_date,
+                'name' => (string)$site->data->gen_info->name,
+                'ip' => (string)$site->data->gen_info->dns_ip_address,
+                'hosting_type' => $hosting_type,
+                'ip_address' => (string)$site->data->hosting->{$hosting_type}->ip_address,
+                'www_root' => $this->findHostingProperty($site->data->hosting->{$hosting_type}, 'www_root'),
+                'ftp_username' => $this->findHostingProperty($site->data->hosting->{$hosting_type}, 'ftp_login'),
+                'ftp_password' => $this->findHostingProperty($site->data->hosting->{$hosting_type}, 'ftp_password'),
+            ];
         }
+
         return $result;
     }
 
-    /*
-     * Helper function to search an XML tree for a specific property
-     * @return string
+    /**
+     * @param $node
+     * @param $key
+     * @return null|string
      */
     protected function findHostingProperty($node, $key)
     {
-    	foreach($node->children() AS $property)
-    	{
-    		if ($property->name == $key)
-    			return (string)$property->value;
-    	}
-    	return NULL;
+        foreach ($node->children() as $property) {
+            if ($property->name == $key) {
+                return (string)$property->value;
+            }
+        }
+
+        return null;
     }
 }

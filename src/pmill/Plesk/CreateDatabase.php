@@ -3,6 +3,9 @@ namespace pmill\Plesk;
 
 class CreateDatabase extends BaseRequest
 {
+    /**
+     * @var string
+     */
     public $xml_packet = <<<EOT
 <?xml version="1.0"?>
 <packet version="1.6.3.0">
@@ -16,28 +19,34 @@ class CreateDatabase extends BaseRequest
     </database>
 </packet>
 EOT;
-    
+
     /**
-    * @var array
-    */
-    protected $default_params = array(
-        'subscription_id' => NULL,
-        'server_id' => NULL,
-        'name' => NULL,
+     * @var int
+     */
+    public $id;
+
+    /**
+     * @var array
+     */
+    protected $default_params = [
+        'subscription_id' => null,
+        'server_id' => null,
+        'name' => null,
         'type' => 'mysql'
-    );
-    
+    ];
+
     /**
-    * @param string $xml
-    * @return bool
-    */
+     * @param $xml
+     * @return bool
+     * @throws ApiRequestException
+     */
     protected function processResponse($xml)
     {
         if ($xml->database->{'add-db'}->result->status == 'error') {
-            throw new ApiRequestException((string)$xml->database->{'add-db'}->result->errtext);
+            throw new ApiRequestException($xml->database->{'add-db'}->result);
         }
-        
+
         $this->id = (int)$xml->database->{'add-db'}->result->id;
-        return TRUE;
+        return true;
     }
 }

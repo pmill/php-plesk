@@ -3,6 +3,9 @@ namespace pmill\Plesk;
 
 class DeleteSubdomain extends BaseRequest
 {
+    /**
+     * @var string
+     */
     public $xml_packet = <<<EOT
 <?xml version="1.0"?>
 <packet version="1.5.2.0">
@@ -16,34 +19,44 @@ class DeleteSubdomain extends BaseRequest
 </packet>
 EOT;
 
-	protected $default_params = array(
-		'filter'=>NULL,
-	);
+    /**
+     * @var array
+     */
+    protected $default_params = [
+        'filter' => null,
+    ];
 
-	public function __construct($config, $params=array())
-	{
-		if (isset($params['subdomain'])) {
-			$params['filter'] = '<name>'.$params['subdomain'].'</name>';
-		}
-        
+    /**
+     * @param array $config
+     * @param array $params
+     * @throws ApiRequestException
+     */
+    public function __construct($config, $params = [])
+    {
+        if (isset($params['subdomain'])) {
+            $params['filter'] = new Node('name', $params['subdomain']);
+        }
+
         if (isset($params['id'])) {
-			$params['filter'] = '<id>'.$params['id'].'</id>';
-		}
+            $params['filter'] = new Node('id', $params['id']);
+        }
 
-		parent::__construct($config, $params);
+        parent::__construct($config, $params);
     }
 
     /**
-     * Process the response from Plesk
+     * @param $xml
      * @return bool
+     * @throws ApiRequestException
      */
     protected function processResponse($xml)
     {
         $result = $xml->subdomain->del->result;
 
-        if ($result->status == 'error')
-            throw new ApiRequestException((string)$result->errtext);
+        if ($result->status == 'error') {
+            throw new ApiRequestException($result);
+        }
 
-        return TRUE;
+        return true;
     }
 }

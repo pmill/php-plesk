@@ -3,6 +3,9 @@ namespace pmill\Plesk;
 
 class ListEmailAddresses extends BaseRequest
 {
+    /**
+     * @var string
+     */
     public $xml_packet = <<<EOT
 <?xml version="1.0"?>
 <packet version="1.6.3.0">
@@ -17,39 +20,48 @@ class ListEmailAddresses extends BaseRequest
 </packet>
 EOT;
 
-	protected $default_params = array(
-        'site_id'=>NULL,
-	);
+    /**
+     * @var array
+     */
+    protected $default_params = [
+        'site_id' => null,
+    ];
 
-	public function __construct($config, $params)
-	{
+    /**
+     * @param array $config
+     * @param array $params
+     * @throws ApiRequestException
+     */
+    public function __construct($config, $params)
+    {
         if (isset($params['domain'])) {
-            $request = new GetSite($config, array('domain'=>$params['domain']));
+            $request = new GetSite($config, ['domain' => $params['domain']]);
             $info = $request->process();
 
             $params['site_id'] = $info['id'];
-        }   
-        
-		parent::__construct($config, $params);         
+        }
+
+        parent::__construct($config, $params);
     }
 
     /**
-     * Process the response from Plesk
+     * @param $xml
      * @return array
      */
     protected function processResponse($xml)
     {
-        $result = array();
-        foreach($xml->mail->get_info->children() AS $node)
-        {
-        	$result[] = array(
-        		'status'=>(string)$node->status,
-        		'id'=>(int)$node->mailname->id,
-        		'username'=>(string)$node->mailname->name,
-        		'enabled'=>(bool)$node->mailname->mailbox->enabled,
-        		'password'=>(string)$node->mailname->password->value,
-        	);
+        $result = [];
+
+        foreach ($xml->mail->get_info->children() as $node) {
+            $result[] = [
+                'status' => (string)$node->status,
+                'id' => (int)$node->mailname->id,
+                'username' => (string)$node->mailname->name,
+                'enabled' => (bool)$node->mailname->mailbox->enabled,
+                'password' => (string)$node->mailname->password->value,
+            ];
         }
+
         return $result;
     }
 }

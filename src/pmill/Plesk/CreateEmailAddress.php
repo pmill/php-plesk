@@ -3,6 +3,9 @@ namespace pmill\Plesk;
 
 class CreateEmailAddress extends BaseRequest
 {
+    /**
+     * @var string
+     */
     public $xml_packet = <<<EOT
 <?xml version="1.0" encoding="UTF-8"?>
 <packet version="1.6.3.5">
@@ -26,22 +29,36 @@ class CreateEmailAddress extends BaseRequest
 </packet>
 EOT;
 
-	protected $default_params = array(
-		'email'=>NULL,
-		'password'=>NULL,
-		'enabled'=>TRUE,
-	);
+    /**
+     * @var int
+     */
+    public $id;
 
+    /**
+     * @var array
+     */
+    protected $default_params = [
+        'email' => null,
+        'password' => null,
+        'enabled' => true,
+    ];
+
+    /**
+     * @param array $config
+     * @param array $params
+     * @throws ApiRequestException
+     */
     public function __construct($config, $params)
     {
-    	parent::__construct($config, $params);
+        parent::__construct($config, $params);
 
-		if (!filter_var($this->params['email'], FILTER_VALIDATE_EMAIL))
-			throw new ApiRequestException("Error: Invalid email submitted");
+        if (!filter_var($this->params['email'], FILTER_VALIDATE_EMAIL)) {
+            throw new ApiRequestException("Error: Invalid email submitted");
+        }
 
         list($username, $domain) = explode("@", $this->params['email']);
 
-        $request = new GetSite($config, array('domain'=>$domain));
+        $request = new GetSite($config, ['domain' => $domain]);
         $info = $request->process();
 
         $this->params['site_id'] = $info['id'];
@@ -49,17 +66,19 @@ EOT;
     }
 
     /**
-     * Process the response from Plesk
+     * @param $xml
      * @return bool
+     * @throws ApiRequestException
      */
     protected function processResponse($xml)
     {
         $result = $xml->mail->create->result;
 
-        if ($result->status == 'error')
-            throw new ApiRequestException((string)$result->errtext);
+        if ($result->status == 'error') {
+            throw new ApiRequestException($result);
+        }
 
         $this->id = (int)$result->mailname->id;
-        return TRUE;
+        return true;
     }
 }

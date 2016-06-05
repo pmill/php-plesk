@@ -1,13 +1,39 @@
 <?php
 namespace pmill\Plesk;
 
+use pmill\Plesk\Helper\Xml;
+use SimpleXMLElement;
+
 abstract class BaseRequest
 {
-    protected $curl = NULL;
-    protected $config = array();
-    protected $params = array();
-	protected $default_params = array();
-	protected $node_mapping = array();
+    /**
+     * @var HttpRequestContract
+     */
+    protected $http;
+
+    /**
+     * @var array
+     */
+    protected $config = [];
+
+    /**
+     * @var array
+     */
+    protected $params = [];
+
+    /**
+     * @var array
+     */
+	protected $default_params = [];
+
+    /**
+     * @var array
+     */
+	protected $node_mapping = [];
+
+    /**
+     * @var string
+     */
 	protected $property_template = <<<EOT
 <property>
 	<name>{KEY}</name>
@@ -15,126 +41,158 @@ abstract class BaseRequest
 </property>
 EOT;
 
-    public $xml_filename = NULL;
-    public $xml_packet = NULL;
-    public $request_header = NULL;
-    public $error = NULL;
+    /**
+     * @var string
+     */
+    public $xml_filename;
 
+    /**
+     * @var string
+     */
+    public $xml_packet;
+
+    /**
+     * @var string
+     */
+    public $request_header;
+
+    /**
+     * @var string|\Exception
+     */
+    public $error;
+
+    /**
+     * @var string
+     */
+    public $xml_response;
+
+    /**
+     * @param $xml
+     * @return string|bool|array
+     */
     abstract protected function processResponse($xml);
 
-    public function __construct($config, $params=array())
+    /**
+     * @param array $config
+     * @param array $params
+     * @param HttpRequestContract|null $http
+     * @throws ApiRequestException
+     */
+    public function __construct(array $config, array $params = [], HttpRequestContract $http = null)
     {
         $this->config = $config;
         $this->params = $params;
 
         if (!$this->check_params()) {
-    		throw new ApiRequestException("Error: Incorrect request parameters submitted");
-    	}
+            throw new ApiRequestException("Error: Incorrect request parameters submitted");
+        }
 
-        $this->init();
+        $this->params = Xml::sanitizeArray($this->params);
 
-        if ($this->xml_packet === NULL AND file_exists($this->xml_filename)) {
+        $this->http = is_null($http) ? new CurlHttpRequest($this->config['host']) : $http;
+        if (isset($this->config['username']) && isset($this->config['password'])) {
+            $this->http->setCredentials($this->config['username'], $this->config['password']);
+        }
+
+        if (isset($this->config['key'])) {
+            $this->http->setSecretKey($this->config['key']);
+        }
+
+        if (is_null($this->xml_packet) && file_exists($this->xml_filename)) {
             $this->xml_packet = file_get_contents($this->xml_filename);
         }
 
-        if ($this->xml_packet === NULL) {
-        	throw new ApiRequestException("Error: No XML Packet supplied");
+        if (is_null($this->xml_packet)) {
+            throw new ApiRequestException("Error: No XML Packet supplied");
         }
     }
 
     /**
-	 * Checks the required parameters were submitted. Optional parameters are specified with a non NULL value in the class declaration
-	 * @return bool
+     * Checks the required parameters were submitted. Optional parameters are specified with a non NULL value in the
+     * class declaration
+     *
+     * @return bool
+     * @throws ApiRequestException
      */
     protected function check_params()
     {
-		if (!is_array($this->default_params)) {
-			return FALSE;
-		}
+        if (!is_array($this->default_params)) {
+            return false;
+        }
 
-		foreach ($this->default_params AS $key=>$value) {
-			if (!isset($this->params[$key])) {
-				if ($value === NULL) {
-					return FALSE;
-				}
-				elseif ($value !== NULL) {
-					$this->params[$key] = $value;
-				}
-			}
-		}
-		return TRUE;
-    }
+        foreach ($this->default_params as $key => $value) {
+            if (!isset($this->params[$key])) {
+                if (is_null($value)) {
+                    return false;
+                } else {
+                    $this->params[$key] = $value;
+                }
+            }
+        }
 
-	/**
-	 * Generates the xml for a standard property list
-	 * @param array property list
-	 * @return string
-     */
-    protected function generatePropertyList(array $properties)
-    {
-    	$result = array();
-
-    	foreach ($properties AS $key=>$value) {
-    		$xml = $this->property_template;
-    		$xml = str_replace("{KEY}", $key, $xml);
-    		$xml = str_replace("{VALUE}", $value, $xml);
-    		$result[] = $xml;
-    	}
-
-    	return implode("\r\n", $result);
+        return true;
     }
 
     /**
-	 * Generates the xml for a list of nodes
-	 * @param array property list
-	 * @return string
+     * Generates the xml for a standard property list
+     *
+     * @param array $properties
+     * @return string
+     */
+    protected function generatePropertyList(array $properties)
+    {
+        return Xml::generatePropertyList($properties);
+    }
+
+    /**
+     * Generates the xml for a list of nodes
+     *
+     * @param array $properties
+     * @return string
      */
     protected function generateNodeList(array $properties)
     {
-    	$result = array();
-
-		foreach ($properties AS $key=>$value) {
-			if (isset($this->node_mapping[$key])) {
-				$node_name = $this->node_mapping[$key];
-				$result[] = "<".$node_name.">".$value."</".$node_name.">";
-			}
-		}
-
-    	return implode("\r\n", $result);
+        return Xml::generateNodeList($this->node_mapping, $properties);
     }
 
     /**
      * Submits the xml packet to the Plesk server and forwards the response on for processing
+     *
      * @return object
      */
     public function process()
     {
         try {
             $response = $this->sendRequest($this->getPacket());
-            if ($response !== FALSE) {
-                $responseXml = $this->parseResponse($response);
+
+            if ($response !== false) {
+                $this->xml_response = $response;
+                $responseXml = Xml::convertStringToXml($response);
                 $this->checkResponse($responseXml);
+
+                return $this->processResponse($responseXml);
             }
-        }
-        catch (ApiRequestException $e) {
+        } catch (ApiRequestException $e) {
             $this->error = $e;
-            return FALSE;
         }
-        return $this->processResponse($responseXml);
+
+        return false;
     }
 
     /**
      * Inserts the submitted parameters into the xml packet
+     *
      * @return string
      */
     protected function getPacket()
     {
         $packet = $this->xml_packet;
 
-        foreach($this->params AS $key=>$value) {
-            if(is_bool($value)) {
-            	$value = $value ? 'true' : 'false';
+        foreach ($this->params as $key => $value) {
+            if (is_bool($value)) {
+                $value = $value ? 'true' : 'false';
             }
+
             $packet = str_replace('{'.strtoupper($key).'}', $value, $packet);
         }
 
@@ -143,116 +201,36 @@ EOT;
 
     /**
      * Performs a Plesk API request, returns raw API response text
-     */
-    private function init()
-    {
-        $this->curl = curl_init();
-        curl_setopt($this->curl, CURLOPT_URL, "https://".$this->config['host'].":8443/enterprise/control/agent.php");
-        curl_setopt($this->curl, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($this->curl, CURLOPT_POST,           true);
-        curl_setopt($this->curl, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($this->curl, CURLOPT_SSL_VERIFYHOST, false);
-        curl_setopt($this->curl, CURLINFO_HEADER_OUT, true);
-        curl_setopt($this->curl, CURLOPT_HTTPHEADER, array('Content-Type: text/xml'));
-        curl_setopt($this->curl, CURLOPT_HTTPHEADER, array(
-                "HTTP_AUTH_LOGIN: ".$this->config['username'],
-                "HTTP_AUTH_PASSWD: ".$this->config['password'],
-                "HTTP_PRETTY_PRINT: TRUE",
-                "Content-Type: text/xml"
-            )
-        );
-    }
-
-    /**
-     * Performs a Plesk API request, returns raw API response text
      *
-     * @param string packet
+     * @param string $packet
+     *
      * @return string
      * @throws ApiRequestException
      */
     private function sendRequest($packet)
     {
         $domdoc = new \DomDocument('1.0', 'UTF-8');
-        if ($domdoc->loadXml($packet) === FALSE) {
+        if ($domdoc->loadXml($packet) === false) {
             $this->error = 'Failed to load payload';
-            return FALSE;
+            return false;
         }
 
-        curl_setopt($this->curl, CURLOPT_POSTFIELDS, $domdoc->saveHTML());
-        $result = curl_exec($this->curl);
-        if (curl_errno($this->curl)) {
-            $errmsg  = curl_error($this->curl);
-            $errcode = curl_errno($this->curl);
-            curl_close($this->curl);
-            throw new ApiRequestException($errmsg, $errcode);
-        }
-
-        $info =  curl_getinfo($this->curl);
-        $this->request_header = curl_getinfo($this->curl, CURLINFO_HEADER_OUT);
-
-        curl_close($this->curl);
-        return $result;
-    }
-
-    /**
-     * Looks if API responded with correct data
-     *
-     * @param string response string
-     * @return SimpleXMLElement
-     * @throws ApiRequestException
-     */
-    private function parseResponse($response_string)
-    {
-        $xml = new \SimpleXMLElement($response_string);
-
-        if (!is_a($xml, 'SimpleXMLElement')) {
-            throw new ApiRequestException("Cannot parse server response: {$response_string}");
-        }
-
-        return $xml;
+        $body = $domdoc->saveHTML();
+        return $this->http->sendRequest($body);
     }
 
     /**
      * Check data in API response
+     *
+     * @param SimpleXMLElement $response
+     *
      * @return void
      * @throws ApiRequestException
      */
-    private function checkResponse(\SimpleXMLElement $response) {
-        if ($response->system->status == 'error') {
-            throw new ApiRequestException("Error: " . $response->system->errtext);
+    private function checkResponse(SimpleXMLElement $response)
+    {
+        if ($response->system->status === 'error') {
+            throw new ApiRequestException($response->system);
         }
-    }
-
-    /*
-	 * Helper function to search an XML tree for a specific property
-	 * @return string
-	 */
-	protected function findProperty($node, $key, $node_name='property')
-	{
-		foreach ($node->children() AS $property)
-		{
-			if ($property->getName() == $node_name && $property->name == $key) {
-				return (string)$property->value;
-			}
-		}
-		return NULL;
-	}
-
-	/*
-	 * Helper function to collapse list of xml tags into an associative array
-	 * @return array
-	 */
-	protected function getProperties($node, $node_name='property')
-	{
-		$result = array();
-
-		foreach ($node->children() AS $property)
-		{
-			if ($property->getName() == $node_name) {
-				$result[(string)$property->name] = (string)$property->value;
-			}
-		}
-
-		return $result;
     }
 }

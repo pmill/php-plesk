@@ -3,6 +3,9 @@ namespace pmill\Plesk;
 
 class CreateSiteAlias extends BaseRequest
 {
+    /**
+     * @var string
+     */
     public $xml_packet = <<<EOT
 <?xml version="1.0"?>
 <packet version="1.6.3.5">
@@ -21,42 +24,56 @@ class CreateSiteAlias extends BaseRequest
 </packet>
 EOT;
 
-	protected $default_params = array(
-		'site_id'=>NULL,
-		'alias'=>NULL,
-		'web_enabled'=>1,
-		'mail_enabled'=>0,
-		'tomcat_enabled'=>0,
-	);
+    /**
+     * @var int
+     */
+    public $id;
 
+    /**
+     * @var array
+     */
+    protected $default_params = [
+        'site_id' => null,
+        'alias' => null,
+        'web_enabled' => 1,
+        'mail_enabled' => 0,
+        'tomcat_enabled' => 0,
+    ];
+
+    /**
+     * @param array $config
+     * @param array $params
+     * @throws ApiRequestException
+     */
     public function __construct($config, $params)
     {
         if (!isset($params['site_id'])) {
             if (is_int($params['domain'])) {
                 $params['site_id'] = $params['domain'];
-            }
-            else {
+            } else {
                 $request = new GetSite($config, $params);
                 $info = $request->process();
                 $params['site_id'] = $info['id'];
             }
         }
-        
-    	parent::__construct($config, $params);
+
+        parent::__construct($config, $params);
     }
 
     /**
-     * Process the response from Plesk
+     * @param $xml
      * @return bool
+     * @throws ApiRequestException
      */
     protected function processResponse($xml)
     {
         $result = $xml->{'site-alias'}->create->result;
 
-        if ($result->status == 'error')
-            throw new ApiRequestException((string)$result->errtext);
+        if ($result->status == 'error') {
+            throw new ApiRequestException($result);
+        }
 
         $this->id = (int)$result->id;
-        return TRUE;
+        return true;
     }
 }
