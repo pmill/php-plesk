@@ -101,6 +101,10 @@ Unversioned (13 Apr 2013)
 *   Code quality improvements
 *   Updated ListSubscriptions to retrieve subscription status
 
+0.5.4 (13/06/2016)
+
+*   Added GetSubscription functionality (thanks [Glenn Hermans](https://github.com/ghermans))
+
 Copyright and License
 ---------------------
 
