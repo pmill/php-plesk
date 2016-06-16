@@ -76,12 +76,6 @@ EOT;
                         $helper = new PHPSettings();
                         $params['values'][$key] = $helper->generate($values);
                         break;
-                    case 'plan-id':
-                    case 'plan-name':
-                    case 'plan-guid':
-                    case 'plan-external-id':
-                        $params['values'][$key] = $values;
-                        break;
                 }
             }
 
