@@ -67,6 +67,11 @@ EOT;
     public $xml_response;
 
     /**
+     * @var string
+     */
+    public $xml_request;
+
+    /**
      * @param $xml
      * @return string|bool|array
      */
@@ -196,7 +201,7 @@ EOT;
             $packet = str_replace('{'.strtoupper($key).'}', $value, $packet);
         }
 
-        return $packet;
+        return $this->xml_request = $packet;
     }
 
     /**
@@ -229,7 +234,7 @@ EOT;
      */
     private function checkResponse(SimpleXMLElement $response)
     {
-        if ($response->system->status === 'error') {
+        if ($response->system->status == 'error') {
             throw new ApiRequestException($response->system);
         }
     }
