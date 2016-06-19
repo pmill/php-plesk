@@ -54,7 +54,7 @@ EOT;
     {
         $properties = [];
 
-        foreach (['php', 'php_handler_type', 'webstat', 'www_root'] as $key) {
+        foreach (['php', 'php_handler_type', 'webstat', 'www_root', 'php', 'php_handler_id', 'php_version'] as $key) {
             if (isset($params[$key])) {
                 $properties[$key] = $params[$key];
             }
