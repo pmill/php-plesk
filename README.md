@@ -111,6 +111,10 @@ Unversioned (13 Apr 2013)
 *   Added ListDNS functionality (thanks [carlswart](https://github.com/carlswart))
 
 
+New
+
+*   Updated available parameters on UpdateSite
+
 Copyright and License
 ---------------------
 
