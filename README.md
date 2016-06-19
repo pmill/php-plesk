@@ -96,6 +96,10 @@ Unversioned (13 Apr 2013)
 *   Updated GetServicePlan to accept 'guid' as a filter option
 *   Updated DeleteSiteAlias to accept 'alias' as a filter option
 
+New
+
+*   Updated available parameters on UpdateSite
+
 Copyright and License
 ---------------------
 
