@@ -101,6 +101,16 @@ Unversioned (13 Apr 2013)
 *   Code quality improvements
 *   Updated ListSubscriptions to retrieve subscription status
 
+0.5.4 (13/06/2016)
+
+*   Added GetSubscription functionality (thanks [Glenn Hermans](https://github.com/ghermans))
+
+0.5.5 (15/08/2016)
+
+*   Added GetTraffic functionality (thanks [texh](https://github.com/texh))
+*   Added ListDNS functionality (thanks [carlswart](https://github.com/carlswart))
+
+
 Copyright and License
 ---------------------
 
