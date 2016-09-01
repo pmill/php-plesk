@@ -229,7 +229,7 @@ EOT;
      */
     private function checkResponse(SimpleXMLElement $response)
     {
-        if ($response->system->status === 'error') {
+        if ((string)$response->system->status === 'error') {
             throw new ApiRequestException($response->system);
         }
     }
