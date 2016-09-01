@@ -81,6 +81,7 @@ EOT;
 
         return [
             'id' => (string)$plan->id,
+            'guid' => (string)$plan->guid,
             'status' => (string)$plan->status,
             'limits' => [
                 'overuse' => (string)$plan->limits->overuse,

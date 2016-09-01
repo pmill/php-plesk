@@ -37,6 +37,7 @@ EOT;
 
             $result[] = [
                 'id' => (string)$plan->id,
+                'guid'    =>(string)$plan->guid,
                 'status' => (string)$plan->status,
                 'name' => (string)$plan->name,
                 'limits' => [
