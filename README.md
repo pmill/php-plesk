@@ -103,13 +103,18 @@ Unversioned (13 Apr 2013)
 
 0.5.4 (13/06/2016)
 
-*   Added GetSubscription functionality (thanks [Glenn Hermans](https://github.com/ghermans))
+*   Added GetSubscription functionality (thanks [ghermans](https://github.com/ghermans))
 
 0.5.5 (15/08/2016)
 
 *   Added GetTraffic functionality (thanks [texh](https://github.com/texh))
 *   Added ListDNS functionality (thanks [carlswart](https://github.com/carlswart))
 
+0.5.6 (01/09/2016)
+
+*   Error handling bug fix
+*   Exposed service plan guid property (thanks [ghermans](https://github.com/ghermans))
+  
 
 Copyright and License
 ---------------------

@@ -1,6 +1,14 @@
 pmill/php-plesk contributors
 ============================
 
-* **[Glenn Hermans](https://github.com/ghermans)**
+* **[ghermans](https://github.com/ghermans)**
 
   * GetSubscription
+  
+* **[texh](https://github.com/texh)**
+
+  * GetTraffic
+
+* **[carlswart](https://github.com/carlswart)**
+
+  * ListDNS
