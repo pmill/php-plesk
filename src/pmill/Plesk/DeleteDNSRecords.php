@@ -1,7 +1,7 @@
 <?php
 namespace pmill\Plesk;
 
-class DeleteDatabase extends BaseRequest
+class DeleteDNSRecords extends BaseRequest
 {
     /**
      * @var string
