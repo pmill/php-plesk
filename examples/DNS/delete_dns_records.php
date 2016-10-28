@@ -3,7 +3,8 @@
 require_once("../config.php");
 
 $params = array(
-    'id'=>'',
+    'id'=>1,
+    //'domain'=>'example.com'
 );
 
 $request = new \pmill\Plesk\DeleteDNSRecords($config, $params);
