@@ -15,7 +15,7 @@ class ListUsers extends BaseRequest
             <all/>
         </filter>
         <dataset>
-            <gen_info/>
+            <gen-info/>
             <roles/>
         </dataset>
     </get>

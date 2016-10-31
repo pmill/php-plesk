@@ -15,7 +15,7 @@ class GetUser extends BaseRequest
 			<guid>{GUID}</guid>
 		</filter>
 		<dataset>
-			<gen_info/>
+			<gen-info/>
 			<roles/>
 		</dataset>
 	</get>
