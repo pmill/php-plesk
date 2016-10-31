@@ -40,9 +40,13 @@ EOT;
         $this->default_params['filter'] = new Node('filter');
 
         if (isset($params['subscription_id'])) {
-            $ownerIdNode = new Node('id', $params['subscription_id']);
-            $params['filter'] = new Node('filter', $ownerIdNode);
-        }        
+            $idNode = new Node('id', $params['subscription_id']);
+            $params['filter'] = new Node('filter', $idNode);
+        }
+        if (isset($params['username'])) {
+            $ownerLoginNode = new Node('owner-login', $params['username']);
+            $params['filter'] = new Node('filter', $ownerLoginNode);
+        }
         parent::__construct($config, $params);
     }
 
