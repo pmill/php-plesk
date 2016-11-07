@@ -13,7 +13,7 @@ class ListSubscriptions extends BaseRequest
 <packet version="1.6.3.0">
 <webspace>
     <get>
-        {FILTER}
+        <filter/>
         <dataset>
 			<hosting/>
 			<subscriptions/>
@@ -22,30 +22,6 @@ class ListSubscriptions extends BaseRequest
 </webspace>
 </packet>
 EOT;
-
-    /**
-     * @var array
-     */
-    protected $default_params = [
-        'filter' => null,
-    ];
-
-    /**
-     * @param array $config
-     * @param array $params
-     * @throws ApiRequestException
-     */
-    public function __construct($config, $params = [])
-    {
-        $this->default_params['filter'] = new Node('filter');
-
-        if (isset($params['client_id'])) {
-            $ownerIdNode = new Node('owner-id', $params['client_id']);
-            $params['filter'] = new Node('filter', $ownerIdNode);
-        }
-
-        parent::__construct($config, $params);
-    }
 
     /**
      * @param $xml
