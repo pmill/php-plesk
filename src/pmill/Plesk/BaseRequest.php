@@ -172,11 +172,13 @@ EOT;
 
                 return $this->processResponse($responseXml);
             }
+            return false;
+
         } catch (ApiRequestException $e) {
             $this->error = $e;
+            throw new ApiRequestException($e->getMessage(), $e->getCode());
         }
 
-        return false;
     }
 
     /**
