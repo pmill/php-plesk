@@ -7,6 +7,8 @@ require_once("../config.php");
  */
 $params = array(
 	'subscription_id'=>'1',
+	//'name'=>'example.com',
+	//'username'=>'',
 );
 
 $request = new \pmill\Plesk\GetSubscription($config, $params);

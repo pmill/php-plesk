@@ -47,6 +47,10 @@ EOT;
             $ownerLoginNode = new Node('owner-login', $params['username']);
             $params['filter'] = new Node('filter', $ownerLoginNode);
         }
+        if (isset($params['name'])) {
+            $nameNode = new Node('name', $params['name']);
+            $params['filter'] = new Node('filter', $nameNode);
+        }
         parent::__construct($config, $params);
     }
 
