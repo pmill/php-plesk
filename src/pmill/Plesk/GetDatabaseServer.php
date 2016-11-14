@@ -14,8 +14,8 @@ class GetDatabaseServer extends BaseRequest
       <filter>
           {FILTER}
       </filter>
-   </get-local
-</dd_server>
+   </get-local>
+</db_server>
 </packet>
 EOT;
 
