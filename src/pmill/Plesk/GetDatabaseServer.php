@@ -53,8 +53,12 @@ EOT;
             throw new ApiRequestException($xml->db_server->{'get-local'}->result);
         }
 
-        $this->id = (int)$xml->db_server->{'get-local'}->result->id;
-        return true;
+        $db_server = $xml->db_server->{'get-local'}->result;
+        return [
+            'id' => (int)$db_sever->id,
+            'status' => (string)$db_sever->status,
+            'type' => (string)$db_server->type,
+        ];
     }
 
 }
