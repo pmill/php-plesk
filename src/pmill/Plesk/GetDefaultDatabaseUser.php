@@ -20,11 +20,6 @@ class GetDefaultDatabaseUser extends BaseRequest
 EOT;
 
     /**
-     * @var int
-     */
-    public $id;
-
-    /**
      * @var array
      */
     protected $default_params = [

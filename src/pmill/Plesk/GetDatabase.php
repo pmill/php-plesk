@@ -12,7 +12,7 @@ class GetDatabase extends BaseRequest
 <database>
 	<get-db>
 		<filter>
-			<id>{ID}</id>
+			<webspace-id>{SUBSCRIPTION_ID}</webspace-id>
 		</filter>
 	</get-db>
 </database>
@@ -32,14 +32,16 @@ EOT;
      */
     protected function processResponse($xml)
     {
-       $db = $xml->db->{'get-db'}->result;
-       if ((string)$db->status == 'error') {
-           throw new ApiRequestException($db);
-                                                }
-       if ((string)$db->result->status == 'error') {
-           throw new ApiRequestException($db->result);
-                                                }
-       return [
+
+        $db = $xml->database->{'get-db'}->result;
+        if ((string)$db->status == 'error') {
+            throw new ApiRequestException($db);
+        }
+        if ((string)$db->result->status == 'error') {
+            throw new ApiRequestException($db->result);
+        }
+
+        return [
                 'status' => (string)$node->status,
                 'id' => (int)$node->id,
                 'name' => (string)$node->name,
@@ -47,5 +49,6 @@ EOT;
                 'db_server_id' => (int)$node->{'db-server-id'},
                 'default_user_id' => (int)$node->{'default-user-id'},
             ];
+
     }
 }

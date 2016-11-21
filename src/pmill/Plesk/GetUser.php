@@ -10,16 +10,16 @@ class GetUser extends BaseRequest
 <?xml version="1.0"?>
 <packet version="1.6.7.0">
 <user>
-	<get>
-		<filter>
-			<guid>{GUID}</guid>
-		</filter>
-		<dataset>
-			<gen-info/>
-			<roles/>
-		</dataset>
-	</get>
-</customer>
+  <get>
+    <filter>
+      <guid>{GUID}</guid>
+    </filter>
+    <dataset>
+      <gen-info/>
+      <roles/>
+    </dataset>
+  </get>
+</user>
 </packet>
 EOT;
 
@@ -35,7 +35,7 @@ EOT;
      * @param array $config
      * @param array $params
      */
-    public function __construct(array $config, $params = [])
+    public function __construct(array $config, $params)
     {
         if (isset($params['username'])) {
             $request = new ListUsers($config);

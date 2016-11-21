@@ -8,7 +8,7 @@ class GetDatabaseUser extends BaseRequest
      */
     public $xml_packet = <<<EOT
 <?xml version="1.0"?>
-<packet version="1.4.2.0">
+<packet version="1.6.7.0">
 <database>
    <get-db-users>
       <filter>
@@ -18,11 +18,6 @@ class GetDatabaseUser extends BaseRequest
 </database>
 </packet>
 EOT;
-
-    /**
-     * @var int
-     */
-    public $id;
 
     /**
      * @var array

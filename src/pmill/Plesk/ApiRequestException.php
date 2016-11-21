@@ -16,7 +16,6 @@ class ApiRequestException extends \Exception
             $message = isset($errorNode->errtext) ? (string)$errorNode->errtext : '';
             $code = isset($errorNode->errcode) ? (int)$errorNode->errcode : '';
         }
-
         parent::__construct($message, $code);
     }
 }

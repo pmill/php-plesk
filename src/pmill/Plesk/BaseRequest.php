@@ -178,7 +178,6 @@ EOT;
             $this->error = $e;
             throw new ApiRequestException($e->getMessage(), $e->getCode());
         }
-
     }
 
     /**

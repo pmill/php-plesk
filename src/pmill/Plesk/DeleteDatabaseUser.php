@@ -12,8 +12,7 @@ class DeleteDatabaseUser extends BaseRequest
     <database>
         <del-db-user>
             <filter>
-                <id>{ID}</id>
-                <db-id>{DATABASE_ID}</db-id>
+                {FILTER}
             </filter>
         </del-db-user>
     </database>
@@ -24,9 +23,24 @@ EOT;
      * @var array
      */
     protected $default_params = [
-        'id' => null,
-        'database_id' => null,
+        'filter' => null,
     ];
+
+    /**
+     * @param array $config
+     * @param array $params
+     * @throws ApiRequestException
+     */
+    public function __construct($config, $params = [])
+    {
+        if (isset($params['id'])) {
+            $params['filter'] = new Node('id', $params['id']);
+        }
+        else if (isset($params['database_id'])) {
+            $params['filter'] = new Node('db-id', $params['database_id']);
+        }
+        parent::__construct($config, $params);
+    }
 
     /**
      * @param $xml

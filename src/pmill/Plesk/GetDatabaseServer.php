@@ -55,9 +55,9 @@ EOT;
 
         $db_server = $xml->db_server->{'get-local'}->result;
         return [
-            'id' => (int)$db_sever->id,
-            'status' => (string)$db_sever->status,
-            'type' => (string)$db_server->type,
+             'id' => (int)$db_server->id,
+             'status' => (string)$db_server->status,
+             'type' => (string)$db_server->type,
         ];
     }
 

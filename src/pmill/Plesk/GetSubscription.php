@@ -70,7 +70,7 @@ EOT;
             $webspace = $xml->webspace->get->result[$i];
 
             if ($webspace->status == 'error') {
-                throw new ApiRequestException($webspace);
+                 throw new ApiRequestException($webspace);
             }
 
             $hosting = [];
