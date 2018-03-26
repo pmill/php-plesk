@@ -1,3 +1,6 @@
+Sorry, this library is not being maintained, I no longer work with Plesk professionally so cannot test new features/bug fixes. If anyone is interested in being added to project as a collaborator please send me a message.
+=
+
 php-plesk
 ============
 
