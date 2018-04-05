@@ -56,20 +56,22 @@ EOT;
 
         for ($i = 0; $i < $itemCount; $i++) {
             $site = $xml->site->get->result[$i];
-            $hosting_type = (string)$site->data->gen_info->htype;
+            if (isset($site->id)){
+                $hosting_type = (string)$site->data->gen_info->htype;
 
-            $result[] = [
-                'id' => (string)$site->id,
-                'status' => (string)$site->status,
-                'created' => (string)$site->data->gen_info->cr_date,
-                'name' => (string)$site->data->gen_info->name,
-                'ip' => (string)$site->data->gen_info->dns_ip_address,
-                'hosting_type' => $hosting_type,
-                'ip_address' => (string)$site->data->hosting->{$hosting_type}->ip_address,
-                'www_root' => $this->findHostingProperty($site->data->hosting->{$hosting_type}, 'www_root'),
-                'ftp_username' => $this->findHostingProperty($site->data->hosting->{$hosting_type}, 'ftp_login'),
-                'ftp_password' => $this->findHostingProperty($site->data->hosting->{$hosting_type}, 'ftp_password'),
-            ];
+                $result[] = [
+                    'id' => (string)$site->id,
+                    'status' => (string)$site->status,
+                    'created' => (string)$site->data->gen_info->cr_date,
+                    'name' => (string)$site->data->gen_info->name,
+                    'ip' => (string)$site->data->gen_info->dns_ip_address,
+                    'hosting_type' => $hosting_type,
+                    'ip_address' => (string)$site->data->hosting->{$hosting_type}->ip_address,
+                    'www_root' => $this->findHostingProperty($site->data->hosting->{$hosting_type}, 'www_root'),
+                    'ftp_username' => $this->findHostingProperty($site->data->hosting->{$hosting_type}, 'ftp_login'),
+                    'ftp_password' => $this->findHostingProperty($site->data->hosting->{$hosting_type}, 'ftp_password'),
+                ];
+            }
         }
 
         return $result;

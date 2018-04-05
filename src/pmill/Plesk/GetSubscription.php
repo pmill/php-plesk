@@ -39,10 +39,22 @@ EOT;
     {
         $this->default_params['filter'] = new Node('filter');
 
-        if (isset($params['subscription_id'])) {
-            $ownerIdNode = new Node('id', $params['subscription_id']);
+        if (isset($params['client_id'])) {
+            $ownerIdNode = new Node('owner-id', $params['client_id']);
             $params['filter'] = new Node('filter', $ownerIdNode);
-        }        
+        }
+        if (isset($params['username'])) {
+            $ownerLoginNode = new Node('owner-login', $params['username']);
+            $params['filter'] = new Node('filter', $ownerLoginNode);
+        }
+        if (isset($params['name'])) {
+            $nameNode = new Node('name', $params['name']);
+            $params['filter'] = new Node('filter', $nameNode);
+        }
+        if (isset($params['subscription_id'])) {
+            $idNode = new Node('id', $params['subscription_id']);
+            $params['filter'] = new Node('filter', $idNode);
+        }
         parent::__construct($config, $params);
     }
 
@@ -56,6 +68,10 @@ EOT;
 
         for ($i = 0; $i < count($xml->webspace->get->result); $i++) {
             $webspace = $xml->webspace->get->result[$i];
+
+            if ($webspace->status == 'error') {
+                 throw new ApiRequestException($webspace);
+            }
 
             $hosting = [];
             foreach ($webspace->data->hosting->children() as $host) {

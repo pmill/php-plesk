@@ -57,6 +57,7 @@ EOT;
         $result = [];
 
         foreach ($xml->subdomain->get->result as $node) {
+          if (isset($node->id)){
             $result[] = [
                 'id' => (int)$node->id,
                 'status' => (string)$node->status,
@@ -66,6 +67,7 @@ EOT;
                 'php_handler_type' => (string)Xml::findProperty($node->data, 'php_handler_type'),
                 'www_root' => (string)Xml::findProperty($node->data, 'www_root'),
             ];
+          }
         }
 
         return $result;
